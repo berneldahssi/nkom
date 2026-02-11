@@ -1,0 +1,25 @@
+version: "3.8"
+
+# Production overrides — use with:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  api:
+    build:
+      target: production
+    volumes: []
+    environment:
+      - DEBUG=false
+    restart: always
+
+  web:
+    build:
+      target: production
+    volumes: []
+    restart: always
+
+  postgres:
+    restart: always
+
+  redis:
+    restart: always
