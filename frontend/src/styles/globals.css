@@ -26,15 +26,18 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-neutral font-body text-charcoal antialiased;
+    @apply bg-neutral text-charcoal antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    font-family: 'Montserrat', system-ui, sans-serif;
   }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
 /* Custom scrollbar */
@@ -47,4 +50,49 @@
 ::-webkit-scrollbar-thumb {
   background: #c5d3e5;
   border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9fb4d0;
+}
+
+/* Focus ring */
+*:focus-visible {
+  @apply outline-none ring-2 ring-primary/30 ring-offset-2;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardFlip {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+/* Card flip for flashcards */
+.perspective {
+  perspective: 1000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
