@@ -70,9 +70,10 @@ class Settings(BaseSettings):
     S3_BUCKET_UPLOADS: str = "nkom-user-uploads"
 
     # ── AI Services ──────────────────────────────────────────────
+    ANTHROPIC_API_KEY: str = ""
+    ANTHROPIC_MODEL: str = "claude-3-5-sonnet-20241022"
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4-turbo"
-    ELEVENLABS_API_KEY: str = ""
 
     # ── Rate Limiting ────────────────────────────────────────────
     RATE_LIMIT_FREE: int = 100   # requests per minute
