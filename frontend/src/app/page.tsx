@@ -88,7 +88,7 @@ export default function HomePage() {
             <strong className="text-primary"> Retain 90% of what you study</strong> — not 10%.
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-charcoal/60">
-            NKOM isn't just AI. It's grounded in 7 neuroscience principles and 4 peer-reviewed learning pillars.
+            NKOM isnisn'tapos;t just AI. It's grounded in 7 neuroscience principles and 4 peer-reviewed learning pillars.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
@@ -175,7 +175,7 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-wider text-terracotta">Grounded in Neuroscience</p>
             <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">Why NKOM Actually Works</h2>
             <p className="mx-auto mt-4 max-w-2xl text-charcoal/60">
-              NKOM isn't just AI. It's grounded in 7 neuroscience principles by Idriss Aberkane and peer-reviewed research by Stanislas Dehaene.
+              NKOM isnisn'tapos;t just AI. It's grounded in 7 neuroscience principles by Idriss Aberkane and peer-reviewed research by Stanislas Dehaene.
             </p>
           </div>
 
@@ -183,7 +183,7 @@ export default function HomePage() {
             <div className="rounded-2xl border border-primary/10 bg-white p-8">
               <h3 className="font-heading text-xl font-bold text-primary">7 Aberkane Principles</h3>
               <p className="mt-3 text-sm text-charcoal/60">
-                From "Libérez votre cerveau" — adapted for NKOM:
+                From "Libérez votre cerveau"quot;Libérez votre cerveau"Libérez votre cerveau"quot; — adapted for NKOM:
               </p>
               <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
                 <li className="flex gap-2">
@@ -220,7 +220,7 @@ export default function HomePage() {
             <div className="rounded-2xl border border-primary/10 bg-white p-8">
               <h3 className="font-heading text-xl font-bold text-primary">4 Dehaene Pillars</h3>
               <p className="mt-3 text-sm text-charcoal/60">
-                From "How We Learn" — neuroscience research:
+                From "How We Learn"quot;How We Learn"How We Learn"quot; — neuroscience research:
               </p>
               <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
                 <li className="flex gap-2">
@@ -376,7 +376,7 @@ export default function HomePage() {
             <div className="rounded-2xl border border-primary/10 bg-white p-6 hover:shadow-lg transition">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white font-heading text-sm font-bold">4</div>
               <h3 className="mt-3 font-heading text-lg font-bold text-primary">Wonder</h3>
-              <p className="mt-2 text-sm text-charcoal/60">Curiosity is the engine of learning. We spark it with "Did you know?" hooks.</p>
+              <p className="mt-2 text-sm text-charcoal/60">Curiosity is the engine of learning. We spark it with "Did you know?"quot;Did you know?"Did you know?"quot; hooks.</p>
             </div>
 
             <div className="rounded-2xl border border-terracotta/10 bg-white p-6 hover:shadow-lg transition">
@@ -401,7 +401,7 @@ export default function HomePage() {
           <div className="mt-12 rounded-2xl border-2 border-terracotta/20 bg-terracotta/5 p-8 text-center">
             <p className="text-sm text-charcoal/70">
               <strong>The Result:</strong> Unlike ChatGPT (which answers once and forgets), NKOM tracks your learning journey,
-              predicts what you'll forget, and schedules reviews at scientifically optimal times. That's why you'll retain 90% of what you study.
+              predicts what youyou'llapos;ll forget, and schedules reviews at scientifically optimal times. That's why youyou'llapos;ll retain 90% of what you study.
             </p>
           </div>
         </div>
@@ -461,7 +461,7 @@ export default function HomePage() {
           <div className="rounded-3xl bg-gradient-to-r from-primary to-primary-600 p-12 text-center sm:p-16">
             <h2 className="font-heading text-3xl font-bold text-white sm:text-4xl">Ready to learn like your brain was designed to?</h2>
             <p className="mx-auto mt-4 max-w-xl text-primary-100">
-              NKOM isn't just another AI tool. It's a complete learning science system grounded in African wisdom and neuroscience.
+              NKOM isnisn'tapos;t just another AI tool. It's a complete learning science system grounded in African wisdom and neuroscience.
               Your brain is unique. Your study tools should be too.
             </p>
             <div className="mt-8">
