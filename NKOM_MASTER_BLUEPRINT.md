@@ -1,6 +1,46 @@
 # NKOM - MASTER BLUEPRINT & CAHIER DES CHARGES
 ## AI-Powered Personalized Learning Platform
-### Version 1.0 | February 2026
+### Version 2.0 | February 15, 2026
+**Status:** Refined, Integrated, Production-Ready
+
+---
+
+# QUICK START: THE NKOM THESIS IN 60 SECONDS
+
+**What is NKOM?**
+An AI-powered learning platform that combines African wisdom with neuroscience to help students remember longer, understand deeper, and pass exams with confidence.
+
+**Why it's different:**
+Unlike ChatGPT (which answers questions), NKOM remembers what you learned, predicts what you'll forget, and schedules reviews at scientifically optimal moments. It's not an AI wrapper—it's a complete learning system grounded in peer-reviewed neuroscience.
+
+**The 7 Aberkane Principles (How It Works):**
+1. **Neuroergonomics** — Content adapts to how YOUR brain learns (personalization)
+2. **Mental Handles** — Complex ideas get "handles" (analogies, stories) your brain can grab
+3. **Play** — Gamified learning (XP, streaks, achievements) because brains learn through play
+4. **Wonder** — Every lesson sparks curiosity instead of forcing compliance
+5. **Joy** — Learning feels like discovery, not obligation
+6. **Memory Palaces** — Spatial memory technique creates permanent retention
+7. **Knowledge Economy** — Teaching others deepens your own understanding + builds community
+
+**How You Use It:**
+1. Record your class/upload notes (photo, audio, PDF, text, or live recording)
+2. AI learns about you (what you're studying, how you learn, what exam you're taking)
+3. Get 7 formats: summary, flashcards, quiz, podcast, manga, concept map, practice problems
+4. Gamified spaced repetition tells you exactly when to review each concept
+5. Never forget again. Pass your exam. Feel confident.
+
+**The Business:**
+- **Target:** African students (BAC/GCE) + diaspora parents + professionals
+- **Pricing:** $8-15/month student tier, $25 family plan
+- **Market:** 26M addressable users in Africa + diaspora
+- **Timeline:** MVP in 3 months, breakeven in 6-8 months, $100K ARR by year-end
+
+**Your advantage as founder:**
+- DevOps expertise (can build scalable infrastructure)
+- Marketing background (understand customer psychology)
+- Customer empathy (experienced the education gap firsthand)
+- Network (diaspora connections for early adoption)
+- Authentic story (African-Canadian, building African solutions)
 
 ---
 
@@ -37,14 +77,31 @@
 - No platform combines AI with proven memory science (mnemonics, spaced repetition)
 - Diaspora students struggle to support family members' education remotely
 
-## 1.3 The Solution
+## 1.3 The Solution: Neuroscience-Powered Learning
 
-NKOM allows users to:
-1. **Upload any learning material** (photos of notes, audio recordings, PDFs, text)
-2. **Receive personalized learning experiences** based on their cognitive style (visual, auditory, kinesthetic)
-3. **Master content through science-backed techniques** (mnemonics, active recall, spaced repetition)
-4. **Transform knowledge into applicable skills** through practical exercises
-5. **Prepare effectively** with AI-generated practice tests matching their exam format
+NKOM transforms any learning material into a complete, personalized learning system grounded in three scientific pillars:
+
+### **The Aberkane Approach (7 Principles of Brain Ergonomics)**
+1. **Neuroergonomics** — Content adapts to how the brain naturally learns
+2. **Mental Handles** — Complex ideas get "handles" (analogies, stories, mnemonics)
+3. **Play as Learning** — Gamification transforms studying from work into natural learning
+4. **Wonder Over Conformity** — Every lesson sparks curiosity instead of demanding compliance
+5. **Joy, Not Suffering** — Learning feels like discovery, not obligation
+6. **Memory Palaces** — Spatial memory creates permanent retention
+7. **Knowledge Economy** — Teaching others deepens your own understanding
+
+### **The Dehaene Framework (4 Scientific Pillars)**
+- **Attention** — Short focused sessions with curiosity hooks
+- **Active Engagement** — Forced retrieval, predict-then-learn, teach-back challenges
+- **Error Feedback** — Mistakes become growth with encouraging correction
+- **Consolidation** — Spaced repetition + sleep-aware scheduling + interleaving
+
+### **How It Works:**
+1. **Upload** any learning material (photos, audio, PDFs, text, or instant recordings)
+2. **Get Contextualized** — AI learns about you (role, level, field, learning style)
+3. **Receive Transformed Content** — 7 formats optimized for your brain
+4. **Master Through Play** — Gamified spaced repetition with your personalized path
+5. **Ace Exams** — AI-targeted practice matching your exact exam format
 
 ## 1.4 Key Differentiators
 
@@ -57,7 +114,29 @@ NKOM allows users to:
 | Skill Transformation | Knowledge → Application | Content delivery only |
 | AI Formats | Podcast, Manga, Story, Visual | Text summary only |
 
-## 1.5 Founder Profile
+## 1.5 The Science Behind NKOM (Why It Actually Works)
+
+### Why NKOM Isn't "Just Another AI Wrapper"
+
+Unlike generic AI tutors that give answers, NKOM **changes how you learn** by implementing peer-reviewed neuroscience:
+
+**What ChatGPT does:** Answers questions when you ask
+**What NKOM does:** Remembers what you learned, predicts what you'll forget, and schedules reviews at optimal moments
+
+**Key differentiators grounded in science:**
+- **Memory tracking** — ChatGPT forgets after each chat; NKOM remembers every concept you've studied
+- **Science layer** — Spaced repetition (Ebbinghaus), active recall (Roediger), interleaving (Kornell), testing effect (Karpicke)
+- **Game layer** — Your brain's natural learning mechanism (play) + habit loops (XP, streaks, achievements)
+- **Adaptation layer** — VARK learning styles, error pattern detection, difficulty calibration
+- **Format layer** — 7 formats (summary, flashcards, quiz, podcast, manga, concept map, practice problems)
+- **Analytics layer** — Forgetting curves, mastery percentages, weak spots, predicted exam scores
+- **Emotional layer** — Encouraging, celebrating, wondering (not cold or neutral)
+
+This **moat is impossible to replicate** because it's not just AI — it's neuroscience + AI + psychology + design.
+
+---
+
+## 1.6 Founder Profile
 
 **You** are the ideal founder for this project:
 - **Technical:** DevOps specialist, computer science background
@@ -260,14 +339,15 @@ NKOM allows users to:
 
 ## 5.1 Core Features (MVP - Phase 1)
 
-### Feature 1: Multimodal Input
-**Description:** Users upload learning materials in any format
+### Feature 1: Multimodal Input (Including Live Class Recording)
+**Description:** Users upload learning materials OR record classes/lectures in real-time
 **Supported Formats:**
 - Photos of handwritten notes (JPG, PNG)
-- Audio recordings (MP3, WAV, M4A)
+- Audio recordings (MP3, WAV, M4A) — **or record from app**
 - PDF documents
 - Text paste
 - Screenshots
+- **[NEW] Live Class Recordings** — Tap-to-record lectures, courses, study sessions (MP3, M4A, WAV)
 
 **Technical Requirements:**
 - Computer Vision (OCR) for image-to-text
@@ -277,10 +357,60 @@ NKOM allows users to:
 
 **User Flow:**
 1. User opens app
-2. Selects "New Study Session"
-3. Chooses input method (camera, upload, record, paste)
-4. Uploads content
+2. Selects "New Study Session" or "Record Class"
+3. Chooses input method:
+   - **Camera:** Photo of notes
+   - **Upload:** Files (PDF, audio, etc.)
+   - **Record:** Live recording (NEW)
+   - **Paste:** Text input
+4. Uploads content or records (up to 2 hours continuous)
 5. AI processes and extracts key concepts
+
+---
+
+### Feature 1.5: Instant Live Recording (NEW - MVP Priority)
+**Description:** Record lectures, classes, or study sessions directly from app, with automatic transcription
+**Why This Matters:** Many students find transcription-to-text harder than recording → record first, transcribe later
+**Supported Formats:**
+- MP3, M4A, WAV (device-dependent)
+- Up to 2 hours per recording
+- Local save + async cloud upload
+
+**Technical Requirements:**
+- React Native Audio Recorder Player (iOS & Android)
+- Background recording support
+- Automatic sync to cloud storage (AWS S3)
+- Whisper API for transcription
+- Battery optimization for long recordings
+
+**Key Features:**
+- **Single-tap recording** — Press "Record Class" on dashboard
+- **Visual indicator** — Shows recording time, waveform, file size
+- **Pause/Resume** — Can pause without losing context
+- **Auto-upload** — Background upload when device plugged in + WiFi
+- **Manual upload** — Users can upload immediately if urgent
+- **Privacy** — Option to save locally only (no cloud)
+- **Transcription** — Auto-transcribe with Whisper (can be manual later)
+- **Editing** — Trim recordings, mark sections, add notes
+
+**User Flow:**
+1. Open NKOM app
+2. Tap "Record Class" from main menu
+3. Recording starts with timestamp
+4. Visible timer shows duration
+5. When done, tap "Stop Recording"
+6. Choose: "Generate materials now" or "Upload later"
+7. If generating now: Input lesson name + subject (same as upload flow)
+8. AI transcribes audio + generates all 7 formats
+
+**Why It's MVP-Priority:**
+- **Lower friction than typing/photographing** — Some students can't take good photos
+- **Natural learning** — Captures entire lectures, not just notes
+- **Accessibility** — Students with visual impairments, those in noisy environments
+- **Asynchronous** — Record in class, process later offline
+- **Competitive advantage** — Few platforms offer seamless recording → transcription → AI generation pipeline
+
+---
 
 ### Feature 2: AI Content Transformation
 **Description:** Convert extracted content into multiple learning formats
