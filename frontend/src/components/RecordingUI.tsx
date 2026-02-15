@@ -386,7 +386,7 @@ export const RecordingUI: React.FC<RecordingUIProps> = ({
         </div>
         <h2 className="font-heading text-2xl font-bold text-primary">Record Your Class</h2>
         <p className="text-sm text-charcoal/60 mt-3">
-          Record your lecture up to 2 hours. We'll transcribe it and generate study materials instantly.
+          Record your lecture up to 2 hours. We&apos;ll transcribe it and generate study materials instantly.
         </p>
       </div>
 

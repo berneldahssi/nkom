@@ -34,7 +34,7 @@ export const InstagramCarouselTemplate = () => (
       <div className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-terracotta mb-4">The Science</p>
         <p className="text-3xl font-heading font-bold text-primary mb-6">
-          "Adapt content to the brain, not brains to content"
+          &quot;Adapt content to the brain, not brains to content&quot;
         </p>
         <p className="text-charcoal/70">— Idriss Aberkane, Libérez votre cerveau</p>
       </div>

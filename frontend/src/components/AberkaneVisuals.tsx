@@ -634,27 +634,3 @@ export const PrincipleCard: React.FC<PrincipleCardProps> = ({
     </div>
   );
 };
-
-// ========== READY FOR IMPLEMENTATION ==========
-/*
-Usage in your page:
-
-import {
-  PrincipleCard,
-  NeuroergonomicsVisual,
-  MentalHandlesVisual,
-  // ... import all visuals
-} from '@/components/AberkaneVisuals';
-
-<section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  <PrincipleCard
-    number={1}
-    title="Neuroergonomics"
-    subtitle="Work With Your Brain"
-    description="Content adapts to how you learn, not the other way around."
-    Visual={NeuroergonomicsVisual}
-    color="primary"
-  />
-  {/* ... repeat for all 7 principles */}
-</section>
-*/

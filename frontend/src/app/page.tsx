@@ -200,7 +200,7 @@ export default function HomePage() {
                 </li>
                 <li className="flex gap-2">
                   <span className="shrink-0 text-terracotta">→</span>
-                  <span><strong>Wonder:</strong> Curiosity > compliance</span>
+                  <span><strong>Wonder:</strong> Curiosity &gt; compliance</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="shrink-0 text-terracotta">→</span>
