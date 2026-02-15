@@ -343,12 +343,10 @@ export const JoyVisual = () => (
         <stop offset="0%" style={{ stopColor: '#E8F5E9', stopOpacity: 1 }} />
         <stop offset="100%" style={{ stopColor: '#FBF5E0', stopOpacity: 1 }} />
       </linearGradient>
-      <filter id="sunshine">
-        <feRadialGradient id="sunGrad">
-          <stop offset="0%" style={{ stopColor: '#FFC107', stopOpacity: 0.8 }} />
-          <stop offset="100%" style={{ stopColor: '#FF9800', stopOpacity: 0 }} />
-        </feRadialGradient>
-      </filter>
+      <radialGradient id="sunGrad">
+        <stop offset="0%" style={{ stopColor: '#FFC107', stopOpacity: 0.8 }} />
+        <stop offset="100%" style={{ stopColor: '#FF9800', stopOpacity: 0 }} />
+      </radialGradient>
     </defs>
     <rect width="400" height="300" fill="url(#joy-grad)" />
 

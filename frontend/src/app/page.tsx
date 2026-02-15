@@ -196,7 +196,7 @@ export default function HomePage() {
                 </li>
                 <li className="flex gap-2">
                   <span className="shrink-0 text-terracotta">→</span>
-                  <span><strong>Play as Learning:</strong> Gamification = brain's natural mode</span>
+                  <span><strong>Play as Learning:</strong> Gamification = brain&apos;s natural mode</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="shrink-0 text-terracotta">→</span>
@@ -295,12 +295,12 @@ export default function HomePage() {
               <div>
                 <h3 className="font-heading text-2xl font-bold text-primary">🎙️ Instant Recording: MVP Feature</h3>
                 <p className="mt-3 text-charcoal/70">
-                  Recording is <strong>easier than photos</strong> and <strong>more complete than notes</strong>. You get your entire lecture plus teacher's explanations.
+                  Recording is <strong>easier than photos</strong> and <strong>more complete than notes</strong>. You get your entire lecture plus teacher&apos;s explanations.
                 </p>
                 <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
                   <li>✓ <strong>One-tap recording</strong> — Record up to 2 hours continuously</li>
                   <li>✓ <strong>Automatic transcription</strong> — Whisper AI converts audio to text</li>
-                  <li>✓ <strong>Background upload</strong> — Syncs when you're on WiFi</li>
+                  <li>✓ <strong>Background upload</strong> — Syncs when you&apos;re on WiFi</li>
                   <li>✓ <strong>Instant materials</strong> — Generate all 7 study formats from transcript</li>
                   <li>✓ <strong>Privacy first</strong> — Record locally only, or auto-upload (your choice)</li>
                 </ul>

@@ -182,9 +182,9 @@ export default function UploadPage() {
               {state.file ? (
                 <div className="flex items-center gap-4 rounded-2xl border border-primary/10 bg-white p-6">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    {state.mode === "photo" ? <Image size={20} className="text-primary" /> :
-                     state.mode === "audio" ? <Mic size={20} className="text-primary" /> :
-                     <FileText size={20} className="text-primary" />}
+                    {state.mode === "photo" ? <Image size={20} className="text-primary" aria-label="Image file" /> :
+                     state.mode === "audio" ? <Mic size={20} className="text-primary" aria-label="Audio file" /> :
+                     <FileText size={20} className="text-primary" aria-label="PDF file" />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-charcoal">{state.file.name}</p>
