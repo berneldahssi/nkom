@@ -1,6 +1,7 @@
 """Content upload and processing endpoints."""
 
 import uuid
+import structlog
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,8 +9,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.dependencies import get_current_active_user
 from app.models.content import ContentUpload
+from app.models.study_material import StudyMaterial
 from app.models.user import User
 from app.schemas.content import ContentExtractResponse, ContentTextInput, ContentUploadResponse
+from app.services import ai_service
+
+logger = structlog.get_logger()
 
 router = APIRouter()
 
