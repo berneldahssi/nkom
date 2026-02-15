@@ -18,6 +18,7 @@ import {
   Globe,
   GraduationCap,
   Layers,
+  Home,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -73,7 +74,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-sm font-medium text-gold-700">
             <Sparkles size={14} />
-            AI-Powered Learning Platform
+            African Wisdom + Modern Neuroscience
           </div>
           <h1 className="font-heading text-5xl font-bold tracking-tight text-primary sm:text-6xl lg:text-7xl">
             Wisdom that{" "}
@@ -83,8 +84,11 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-charcoal/70 sm:text-xl">
-            Upload your notes, photos, or audio recordings. NKOM transforms them into
-            personalized learning experiences using AI and proven neuroscience techniques.
+            Record your class. Upload your notes. Get 7 study formats instantly.
+            <strong className="text-primary"> Retain 90% of what you study</strong> — not 10%.
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-charcoal/60">
+            NKOM isn't just AI. It's grounded in 7 neuroscience principles and 4 peer-reviewed learning pillars.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
@@ -164,6 +168,86 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Science Foundation */}
+      <section className="border-y border-primary/5 bg-white px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-terracotta">Grounded in Neuroscience</p>
+            <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">Why NKOM Actually Works</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-charcoal/60">
+              NKOM isn't just AI. It's grounded in 7 neuroscience principles by Idriss Aberkane and peer-reviewed research by Stanislas Dehaene.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-6 sm:grid-cols-2">
+            <div className="rounded-2xl border border-primary/10 bg-white p-8">
+              <h3 className="font-heading text-xl font-bold text-primary">7 Aberkane Principles</h3>
+              <p className="mt-3 text-sm text-charcoal/60">
+                From "Libérez votre cerveau" — adapted for NKOM:
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Neuroergonomics:</strong> Content adapts to your brain</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Mental Handles:</strong> Complex ideas become graspable</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Play as Learning:</strong> Gamification = brain's natural mode</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Wonder:</strong> Curiosity > compliance</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Joy:</strong> Learning feels good, not obligatory</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Memory Palaces:</strong> Spatial memory = retention</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-terracotta">→</span>
+                  <span><strong>Knowledge Economy:</strong> Teaching deepens learning</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-primary/10 bg-white p-8">
+              <h3 className="font-heading text-xl font-bold text-primary">4 Dehaene Pillars</h3>
+              <p className="mt-3 text-sm text-charcoal/60">
+                From "How We Learn" — neuroscience research:
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-primary">✓</span>
+                  <span><strong>Attention:</strong> 25-min focused sessions, curiosity hooks</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-primary">✓</span>
+                  <span><strong>Active Engagement:</strong> You produce answers, not just read</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-primary">✓</span>
+                  <span><strong>Error Feedback:</strong> Mistakes become growth opportunities</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="shrink-0 text-primary">✓</span>
+                  <span><strong>Consolidation:</strong> Spaced repetition + sleep-aware scheduling</span>
+                </li>
+              </ul>
+              <p className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-primary">
+                <strong>Result:</strong> You retain 90% of what you study, not 10%.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section id="features" className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
@@ -171,22 +255,22 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-wider text-terracotta">Features</p>
             <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">Your knowledge, your way</h2>
             <p className="mx-auto mt-4 max-w-2xl text-charcoal/60">
-              NKOM combines multimodal AI with proven neuroscience techniques to create a learning experience uniquely tailored to how your brain works.
+              Upload ANY material, instantly transformed into personalized study tools powered by neuroscience.
             </p>
           </div>
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <FeatureCard icon={<Zap className="h-6 w-6" />} color="gold" title="Instant Recording"
+              description="Record your class with one tap. We transcribe it automatically and generate study materials instantly." />
             <FeatureCard icon={<Upload className="h-6 w-6" />} color="terracotta" title="Multimodal Upload"
-              description="Photos of handwritten notes, audio recordings, PDFs, or plain text — upload anything and we extract the knowledge." />
-            <FeatureCard icon={<Brain className="h-6 w-6" />} color="primary" title="AI Content Transformation"
-              description="Get structured summaries, audio podcasts, interactive flashcards, and practice quizzes generated instantly." />
-            <FeatureCard icon={<Headphones className="h-6 w-6" />} color="gold" title="Learning Style Adaptation"
-              description="Visual, auditory, reading, or kinesthetic — content adapts to how you learn best based on the VARK model." />
-            <FeatureCard icon={<Sparkles className="h-6 w-6" />} color="terracotta" title="Memory Techniques"
-              description="Mnemonics, method of loci, chunking, and visualization — science-backed techniques that make knowledge stick." />
-            <FeatureCard icon={<Zap className="h-6 w-6" />} color="primary" title="Spaced Repetition"
-              description="Smart review scheduling ensures you revisit material at the optimal time for long-term retention." />
-            <FeatureCard icon={<BarChart3 className="h-6 w-6" />} color="gold" title="Progress Tracking"
-              description="Study streaks, mastery scores, time analytics, and performance charts to keep you motivated." />
+              description="Photos, audio recordings, PDFs, text — upload anything and our AI extracts the knowledge." />
+            <FeatureCard icon={<Brain className="h-6 w-6" />} color="primary" title="7-Format AI Transformation"
+              description="Get summaries, flashcards, podcasts, quizzes, concept maps, memory palaces, and practice problems." />
+            <FeatureCard icon={<Sparkles className="h-6 w-6" />} color="terracotta" title="Personalized Learning"
+              description="VARK-adapted output: visual, auditory, reading, kinesthetic. Content matches how YOUR brain learns." />
+            <FeatureCard icon={<BarChart3 className="h-6 w-6" />} color="gold" title="Spaced Repetition + Analytics"
+              description="SuperMemo-2 algorithm schedules reviews at optimal times. See your forgetting curves and mastery %" />
+            <FeatureCard icon={<Headphones className="h-6 w-6" />} color="primary" title="Gamification & Community"
+              description="XP, streaks, achievements. Learn solo or join study groups. Teach others, deepen your own knowledge." />
           </div>
         </div>
       </section>
@@ -196,12 +280,42 @@ export default function HomePage() {
         <div className="mx-auto max-w-5xl">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-wider text-terracotta">How it works</p>
-            <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">Three steps to smarter learning</h2>
+            <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">From class to mastery in 4 steps</h2>
           </div>
-          <div className="mt-16 grid gap-12 lg:grid-cols-3">
-            <StepCard step={1} title="Upload your material" description="Snap a photo of your notes, record a lecture, upload a PDF, or paste text. Our AI handles any format." icon={<Upload size={24} />} />
-            <StepCard step={2} title="AI transforms it" description="GPT-4 extracts key concepts and generates personalized study materials matched to your learning style." icon={<Brain size={24} />} />
-            <StepCard step={3} title="Master & retain" description="Review with spaced repetition, take practice quizzes, and watch your knowledge retention soar." icon={<Sparkles size={24} />} />
+          <div className="mt-16 grid gap-12 lg:grid-cols-4">
+            <StepCard step={1} title="Record or Upload" description="Tap to record your class. Or upload photos, audio, PDFs, text. Any format works." icon={<Upload size={24} />} color="gold" />
+            <StepCard step={2} title="AI Gets Context" description="Tell us: what's your role, level, exam type (BAC/GCE/SAT)? AI learns how YOU learn." icon={<Brain size={24} />} color="primary" />
+            <StepCard step={3} title="Instant Transformation" description="GPT-4 generates 7 study formats: summary, flashcards, podcast, quiz, manga, memory palace, problems." icon={<Sparkles size={24} />} color="terracotta" />
+            <StepCard step={4} title="Master & Remember" description="Review with spaced repetition. Gamification keeps you engaged. Retention soars to 90%." icon={<BarChart3 size={24} />} color="gold" />
+          </div>
+
+          {/* Recording feature highlight */}
+          <div className="mt-20 rounded-3xl border-2 border-gold/30 bg-gold/5 p-12">
+            <div className="flex gap-8 items-start">
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary">🎙️ Instant Recording: MVP Feature</h3>
+                <p className="mt-3 text-charcoal/70">
+                  Recording is <strong>easier than photos</strong> and <strong>more complete than notes</strong>. You get your entire lecture plus teacher's explanations.
+                </p>
+                <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
+                  <li>✓ <strong>One-tap recording</strong> — Record up to 2 hours continuously</li>
+                  <li>✓ <strong>Automatic transcription</strong> — Whisper AI converts audio to text</li>
+                  <li>✓ <strong>Background upload</strong> — Syncs when you're on WiFi</li>
+                  <li>✓ <strong>Instant materials</strong> — Generate all 7 study formats from transcript</li>
+                  <li>✓ <strong>Privacy first</strong> — Record locally only, or auto-upload (your choice)</li>
+                </ul>
+              </div>
+              <div className="shrink-0 hidden lg:block">
+                <div className="rounded-xl bg-white p-6 border border-primary/10 text-center">
+                  <p className="text-4xl">🎤</p>
+                  <p className="mt-2 text-sm font-semibold text-primary">TAP TO RECORD</p>
+                  <div className="mt-4 text-xs text-charcoal/60">
+                    <p>Lecture: 47 min</p>
+                    <p className="text-gold font-semibold mt-1">Materials in 60 sec</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -211,16 +325,84 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-wider text-terracotta">Output Formats</p>
-            <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">One upload, multiple study tools</h2>
+            <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">7 ways to master the material</h2>
             <p className="mx-auto mt-4 max-w-2xl text-charcoal/60">
-              From a single upload, NKOM generates everything you need to truly master the material.
+              From a single upload, NKOM generates everything you need. Pick what works for your brain.
             </p>
           </div>
           <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <FormatCard icon={<BookOpen size={28} />} title="Summaries" description="Structured bullet-point breakdowns of key concepts" />
-            <FormatCard icon={<Headphones size={28} />} title="Audio Podcasts" description="Listen and learn on the go with AI-generated audio" />
-            <FormatCard icon={<Layers size={28} />} title="Flashcards" description="Interactive Q&A cards with mnemonic hints" />
-            <FormatCard icon={<GraduationCap size={28} />} title="Practice Quizzes" description="Multiple choice, true/false, and open-ended questions" />
+            <FormatCard icon={<BookOpen size={28} />} title="Summaries" description="Structured hierarchical breakdowns with mental handles" />
+            <FormatCard icon={<Headphones size={28} />} title="Podcasts" description="AI-generated audio you can listen during commute" />
+            <FormatCard icon={<Layers size={28} />} title="Flashcards" description="Active recall cards with mnemonics built-in" />
+            <FormatCard icon={<GraduationCap size={28} />} title="Quizzes" description="Adaptive difficulty that adjusts to your level" />
+            <FormatCard icon={<Brain size={28} />} title="Concept Maps" description="Visual networks showing how ideas connect" />
+            <FormatCard icon={<Home size={28} />} title="Memory Palaces" description="Spatial technique for permanent retention" />
+            <FormatCard icon={<Sparkles size={28} />} title="Manga Stories" description="Visual narratives embedding concepts" />
+            <FormatCard icon={<Zap size={28} />} title="Practice Problems" description="Real-world scenarios to apply knowledge" />
+          </div>
+        </div>
+      </section>
+
+      {/* Aberkane Principles Section */}
+      <section className="bg-gradient-to-b from-white to-primary/5 px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-terracotta">The Science Behind NKOM</p>
+            <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">7 Neuroscience Principles</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-charcoal/60">
+              Every feature in NKOM implements one of Idriss Aberkane's 7 principles from "Libérez votre cerveau."
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 auto-rows-max">
+            <div className="rounded-2xl border border-primary/10 bg-white p-6 hover:shadow-lg transition">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white font-heading text-sm font-bold">1</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Neuroergonomics</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Content adapts to YOUR brain, not the other way around. One-size-fits-all is dead.</p>
+            </div>
+
+            <div className="rounded-2xl border border-terracotta/10 bg-white p-6 hover:shadow-lg transition">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-terracotta text-white font-heading text-sm font-bold">2</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Mental Handles</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Complex ideas get analogies, stories, and mnemonics your brain can grab.</p>
+            </div>
+
+            <div className="rounded-2xl border border-gold/10 bg-white p-6 hover:shadow-lg transition">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-white font-heading text-sm font-bold">3</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Play as Learning</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Gamification (XP, streaks, achievements) makes your brain WANT to study.</p>
+            </div>
+
+            <div className="rounded-2xl border border-primary/10 bg-white p-6 hover:shadow-lg transition">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white font-heading text-sm font-bold">4</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Wonder</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Curiosity is the engine of learning. We spark it with "Did you know?" hooks.</p>
+            </div>
+
+            <div className="rounded-2xl border border-terracotta/10 bg-white p-6 hover:shadow-lg transition">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-terracotta text-white font-heading text-sm font-bold">5</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Joy, Not Suffering</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Learning should feel good. No punishment, only celebration of progress.</p>
+            </div>
+
+            <div className="rounded-2xl border border-gold/10 bg-white p-6 hover:shadow-lg transition">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-white font-heading text-sm font-bold">6</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Memory Palaces</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Ancient technique: spatial memory is 100x more powerful than rote memorization.</p>
+            </div>
+
+            <div className="rounded-2xl border border-primary/10 bg-white p-6 hover:shadow-lg transition sm:col-span-2 lg:col-span-1">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white font-heading text-sm font-bold">7</div>
+              <h3 className="mt-3 font-heading text-lg font-bold text-primary">Knowledge Economy</h3>
+              <p className="mt-2 text-sm text-charcoal/60">Teaching deepens your own learning. Community sharing creates positive-sum growth.</p>
+            </div>
+          </div>
+
+          <div className="mt-12 rounded-2xl border-2 border-terracotta/20 bg-terracotta/5 p-8 text-center">
+            <p className="text-sm text-charcoal/70">
+              <strong>The Result:</strong> Unlike ChatGPT (which answers once and forgets), NKOM tracks your learning journey,
+              predicts what you'll forget, and schedules reviews at scientifically optimal times. That's why you'll retain 90% of what you study.
+            </p>
           </div>
         </div>
       </section>
@@ -276,21 +458,24 @@ export default function HomePage() {
       {/* CTA */}
       <section className="px-6 py-24">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-3xl bg-primary p-12 text-center sm:p-16">
-            <h2 className="font-heading text-3xl font-bold text-white sm:text-4xl">Ready to learn smarter?</h2>
+          <div className="rounded-3xl bg-gradient-to-r from-primary to-primary-600 p-12 text-center sm:p-16">
+            <h2 className="font-heading text-3xl font-bold text-white sm:text-4xl">Ready to learn like your brain was designed to?</h2>
             <p className="mx-auto mt-4 max-w-xl text-primary-100">
-              Join thousands of students transforming how they study. Your brain is unique — your study tools should be too.
+              NKOM isn't just another AI tool. It's a complete learning science system grounded in African wisdom and neuroscience.
+              Your brain is unique. Your study tools should be too.
             </p>
             <div className="mt-8">
               <Link
                 href="/auth?mode=register"
                 className="group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-medium text-primary shadow-lg transition hover:bg-neutral"
               >
-                Create free account
+                Start your free trial
                 <ArrowRight size={18} className="transition group-hover:translate-x-1" />
               </Link>
             </div>
-            <p className="mt-4 text-sm text-primary-200">No credit card required. Free forever plan available.</p>
+            <p className="mt-4 text-sm text-primary-200">
+              <strong>Free forever</strong> plan • 5 uploads/month • No credit card required
+            </p>
           </div>
         </div>
       </section>
@@ -301,7 +486,11 @@ export default function HomePage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <span className="font-heading text-xl font-bold text-primary">NKOM</span>
-              <p className="mt-3 text-sm text-charcoal/50">AI-powered personalized learning platform. Wisdom that sticks.</p>
+              <p className="mt-3 text-sm text-charcoal/50">
+                From Scientia to Sapientia. African wisdom meets modern neuroscience.
+                <br />
+                <span className="text-xs text-charcoal/40 mt-2 block">Built with ❤️ from Cameroon</span>
+              </p>
             </div>
             <div>
               <h4 className="font-heading text-sm font-semibold text-primary">Product</h4>
@@ -353,11 +542,15 @@ function FeatureCard({ icon, title, description, color }: {
   );
 }
 
-function StepCard({ step, title, description, icon }: { step: number; title: string; description: string; icon: React.ReactNode }) {
+function StepCard({ step, title, description, icon, color = "primary" }: { step: number; title: string; description: string; icon: React.ReactNode; color?: "primary" | "terracotta" | "gold" }) {
+  const bgColors = { primary: "bg-primary", terracotta: "bg-terracotta", gold: "bg-gold" };
+  const shadowColors = { primary: "shadow-primary/25", terracotta: "shadow-terracotta/25", gold: "shadow-gold/25" };
+  const textColors = { primary: "text-primary", terracotta: "text-terracotta", gold: "text-gold" };
+
   return (
     <div className="relative text-center">
-      <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/25">{icon}</div>
-      <div className="mb-2 text-sm font-semibold text-terracotta">Step {step}</div>
+      <div className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${bgColors[color]} text-white shadow-lg ${shadowColors[color]}`}>{icon}</div>
+      <div className={`mb-2 text-sm font-semibold ${textColors[color]}`}>Step {step}</div>
       <h3 className="font-heading text-xl font-bold text-primary">{title}</h3>
       <p className="mt-2 text-sm text-charcoal/60">{description}</p>
     </div>
