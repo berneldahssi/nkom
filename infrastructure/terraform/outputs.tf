@@ -1,3 +1,4 @@
+# VPC Outputs
 output "vpc_id" {
   description = "VPC ID"
   value       = module.vpc.vpc_id
@@ -8,71 +9,118 @@ output "private_subnets" {
   value       = module.vpc.private_subnets
 }
 
+output "public_subnets" {
+  description = "Public subnets"
+  value       = module.vpc.public_subnets
+}
+
+# RDS Outputs
 output "db_endpoint" {
   description = "RDS PostgreSQL endpoint (host:port)"
-  value       = aws_db_instance.postgres.endpoint
+  value       = module.rds.db_endpoint
+}
+
+output "db_host" {
+  description = "RDS hostname"
+  value       = module.rds.db_host
+}
+
+output "db_port" {
+  description = "RDS port"
+  value       = module.rds.db_port
+}
+
+output "db_name" {
+  description = "Database name"
+  value       = module.rds.db_name
 }
 
 output "db_instance_id" {
   description = "RDS instance identifier"
-  value       = aws_db_instance.postgres.identifier
+  value       = module.rds.db_instance_id
 }
 
-output "db_security_group_id" {
-  description = "Security group ID for RDS"
-  value       = aws_security_group.rds.id
-}
-
+# Redis Outputs
 output "redis_endpoint" {
   description = "ElastiCache Redis endpoint"
-  value       = aws_elasticache_cluster.redis.cache_nodes[0].address
+  value       = module.redis.redis_endpoint
 }
 
 output "redis_port" {
   description = "Redis port"
-  value       = aws_elasticache_cluster.redis.port
+  value       = module.redis.redis_port
+}
+
+# Security Groups Outputs
+output "app_security_group_id" {
+  description = "Application security group ID"
+  value       = module.security_groups.app_security_group_id
+}
+
+output "rds_security_group_id" {
+  description = "RDS security group ID"
+  value       = module.security_groups.rds_security_group_id
 }
 
 output "redis_security_group_id" {
-  description = "Security group ID for Redis"
-  value       = aws_security_group.redis.id
+  description = "Redis security group ID"
+  value       = module.security_groups.redis_security_group_id
 }
 
-output "app_security_group_id" {
-  description = "Security group ID for application servers"
-  value       = aws_security_group.app.id
-}
-
+# S3 Outputs
 output "s3_uploads_bucket_name" {
   description = "S3 bucket for user uploads"
-  value       = aws_s3_bucket.uploads.id
+  value       = module.s3.uploads_bucket_id
 }
 
 output "s3_logs_bucket_name" {
   description = "S3 bucket for logs"
-  value       = aws_s3_bucket.logs.id
+  value       = module.s3.logs_bucket_id
 }
 
+# KMS Outputs
 output "kms_rds_key_id" {
   description = "KMS key ID for RDS encryption"
-  value       = aws_kms_key.rds.id
+  value       = module.kms.rds_key_id
 }
 
 output "kms_s3_key_id" {
   description = "KMS key ID for S3 encryption"
-  value       = aws_kms_key.s3.id
+  value       = module.kms.s3_key_id
 }
 
-output "terraform_outputs" {
-  description = "All outputs in JSON format for backend configuration"
+output "kms_secrets_key_id" {
+  description = "KMS key ID for Secrets Manager"
+  value       = module.kms.secrets_key_id
+}
+
+# Monitoring Outputs
+output "alerts_topic_arn" {
+  description = "SNS topic ARN for alerts"
+  value       = module.monitoring.alerts_topic_arn
+}
+
+output "app_log_group_name" {
+  description = "CloudWatch log group for application"
+  value       = module.monitoring.app_log_group_name
+}
+
+output "rds_log_group_name" {
+  description = "CloudWatch log group for RDS"
+  value       = module.monitoring.rds_log_group_name
+}
+
+# Combined Outputs for Backend Configuration
+output "backend_configuration" {
+  description = "All outputs needed for backend .env configuration"
   value = {
-    db_host              = split(":", aws_db_instance.postgres.endpoint)[0]
-    db_port              = 5432
-    db_name              = aws_db_instance.postgres.db_name
-    redis_host           = aws_elasticache_cluster.redis.cache_nodes[0].address
-    redis_port           = aws_elasticache_cluster.redis.port
-    s3_uploads_bucket    = aws_s3_bucket.uploads.id
-    app_security_group   = aws_security_group.app.id
+    db_host              = module.rds.db_host
+    db_port              = module.rds.db_port
+    db_name              = module.rds.db_name
+    redis_host           = module.redis.redis_endpoint
+    redis_port           = module.redis.redis_port
+    s3_uploads_bucket    = module.s3.uploads_bucket_id
+    app_security_group   = module.security_groups.app_security_group_id
   }
   sensitive = false
 }

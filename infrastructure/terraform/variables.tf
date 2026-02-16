@@ -70,3 +70,129 @@ variable "backup_retention_days" {
     error_message = "Backup retention must be between 1 and 35 days."
   }
 }
+
+# VPC Configuration
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "private_subnet_cidrs" {
+  description = "CIDR blocks for private subnets"
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDR blocks for public subnets"
+  type        = list(string)
+  default     = ["10.0.101.0/24", "10.0.102.0/24"]
+}
+
+variable "flow_log_retention_days" {
+  description = "VPC Flow Logs retention period"
+  type        = number
+  default     = 7
+}
+
+# KMS Configuration
+variable "kms_deletion_window_days" {
+  description = "KMS key deletion window in days"
+  type        = number
+  default     = 10
+}
+
+# RDS Configuration
+variable "rds_engine_version" {
+  description = "PostgreSQL engine version"
+  type        = string
+  default     = "15.4"
+}
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+  default     = "nkom"
+}
+
+variable "db_allocated_storage" {
+  description = "Initial allocated storage in GB"
+  type        = number
+  default     = 20
+}
+
+variable "db_max_allocated_storage" {
+  description = "Maximum allocated storage in GB"
+  type        = number
+  default     = 100
+}
+
+variable "db_backup_retention_days" {
+  description = "RDS backup retention period"
+  type        = number
+  default     = 7
+}
+
+variable "db_backup_window" {
+  description = "RDS backup window"
+  type        = string
+  default     = "03:00-04:00"
+}
+
+variable "db_maintenance_window" {
+  description = "RDS maintenance window"
+  type        = string
+  default     = "sun:04:00-sun:05:00"
+}
+
+# Redis Configuration
+variable "redis_engine_version" {
+  description = "Redis engine version"
+  type        = string
+  default     = "7.0"
+}
+
+variable "redis_node_type" {
+  description = "Redis node type"
+  type        = string
+  default     = "cache.t3.micro"
+}
+
+variable "redis_maintenance_window" {
+  description = "Redis maintenance window"
+  type        = string
+  default     = "sun:05:00-sun:06:00"
+}
+
+# S3 Configuration
+variable "s3_version_expiration_days" {
+  description = "Days before deleting old S3 object versions"
+  type        = number
+  default     = 30
+}
+
+variable "s3_object_expiration_days" {
+  description = "Days before deleting S3 objects"
+  type        = number
+  default     = 365
+}
+
+variable "s3_logs_expiration_days" {
+  description = "Days before deleting S3 log files"
+  type        = number
+  default     = 90
+}
+
+# Monitoring Configuration
+variable "log_retention_days" {
+  description = "CloudWatch log retention period"
+  type        = number
+  default     = 7
+}
+
+variable "alert_email" {
+  description = "Email address for CloudWatch alarms"
+  type        = string
+  default     = ""
+}
