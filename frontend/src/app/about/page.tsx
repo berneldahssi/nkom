@@ -56,7 +56,7 @@ export default function AboutPage() {
             Learning science, simplified
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-charcoal/70 sm:text-xl">
-            We believe retention isn't about more hours studying. It's about studying smarter using proven neuroscience principles.
+            We believe retention isn&apos;t about more hours studying. It&apos;s about studying smarter using proven neuroscience principles.
           </p>
         </div>
       </section>
@@ -113,7 +113,7 @@ export default function AboutPage() {
               </div>
               <h3 className="mb-3 font-heading text-lg font-bold text-primary">Interactive</h3>
               <p className="text-sm text-charcoal/70">
-                Passive reading doesn't stick. We create summaries, flashcards, quizzes, and podcasts that actively engage your brain.
+                Passive reading doesn&apos;t stick. We create summaries, flashcards, quizzes, and podcasts that actively engage your brain.
               </p>
             </div>
 
@@ -124,7 +124,7 @@ export default function AboutPage() {
               </div>
               <h3 className="mb-3 font-heading text-lg font-bold text-primary">Spaced Repetition</h3>
               <p className="text-sm text-charcoal/70">
-                We remind you to review material at optimal intervals—right before you'd forget. This is backed by decades of memory research.
+                We remind you to review material at optimal intervals—right before you&apos;d forget. This is backed by decades of memory research.
               </p>
             </div>
           </div>
