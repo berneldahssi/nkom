@@ -32,6 +32,7 @@ export default function HomePage() {
           <div className="hidden items-center gap-8 md:flex">
             <a href="#features" className="text-sm font-medium text-charcoal/70 transition hover:text-primary">Features</a>
             <a href="#how-it-works" className="text-sm font-medium text-charcoal/70 transition hover:text-primary">How it works</a>
+            <Link href="/about" className="text-sm font-medium text-charcoal/70 transition hover:text-primary">About</Link>
             <a href="#pricing" className="text-sm font-medium text-charcoal/70 transition hover:text-primary">Pricing</a>
           </div>
           <div className="hidden items-center gap-3 md:flex">
@@ -49,6 +50,7 @@ export default function HomePage() {
             <div className="flex flex-col gap-3">
               <a href="#features" className="py-2 text-sm font-medium text-charcoal/70" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#how-it-works" className="py-2 text-sm font-medium text-charcoal/70" onClick={() => setMobileMenuOpen(false)}>How it works</a>
+              <Link href="/about" className="py-2 text-sm font-medium text-charcoal/70" onClick={() => setMobileMenuOpen(false)}>About</Link>
               <a href="#pricing" className="py-2 text-sm font-medium text-charcoal/70" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
               <hr className="border-primary/10" />
               <Link href="/auth" className="py-2 text-sm font-medium text-primary">Sign in</Link>
