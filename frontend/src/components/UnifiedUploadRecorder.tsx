@@ -242,7 +242,7 @@ export default function UnifiedUploadRecorder() {
         </button>
 
         <h2 className="font-heading text-2xl font-bold text-primary">Record your material</h2>
-        <p className="mt-2 text-charcoal/60">Record up to 2 hours of audio. We'll transcribe and analyze it.</p>
+        <p className="mt-2 text-charcoal/60">Record up to 2 hours of audio. We&apos;ll transcribe and analyze it.</p>
 
         {/* Recording UI */}
         <div className="mt-12 flex flex-col items-center gap-6 rounded-2xl border border-primary/10 bg-white p-12">
@@ -380,7 +380,8 @@ export default function UnifiedUploadRecorder() {
           {state.file ? (
             <div className="flex items-center gap-4 rounded-2xl border border-primary/10 bg-white p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                {state.file.type.startsWith("image") ? <Image size={20} className="text-primary" /> : <FileText size={20} className="text-primary" />}
+                {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                {state.file.type.startsWith("image") ? <Image size={20} className="text-primary" aria-hidden="true" /> : <FileText size={20} className="text-primary" aria-hidden="true" />}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-charcoal">{state.file.name}</p>

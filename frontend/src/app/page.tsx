@@ -158,7 +158,7 @@ export default function HomePage() {
             <FeatureCard icon={<BarChart3 className="h-6 w-6" />} color="gold" title="Smart Repetition"
               description="Remember more with scientifically-timed review schedules." />
             <FeatureCard icon={<Headphones className="h-6 w-6" />} color="primary" title="Track Progress"
-              description="See what you're mastering. Celebrate wins. Improve continuously." />
+              description="See what you&apos;re mastering. Celebrate wins. Improve continuously." />
           </div>
         </div>
       </section>
@@ -200,7 +200,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-heading text-3xl font-bold text-primary">Built on learning science</h2>
           <p className="mx-auto mt-6 max-w-2xl text-charcoal/70 leading-relaxed">
-            NKOM is grounded in neuroscience research and proven learning principles. Your brain learns best when content is <strong>personalized</strong>, <strong>interactive</strong>, and <strong>spaced over time</strong>. That's exactly how NKOM works.
+            NKOM is grounded in neuroscience research and proven learning principles. Your brain learns best when content is <strong>personalized</strong>, <strong>interactive</strong>, and <strong>spaced over time</strong>. That&apos;s exactly how NKOM works.
           </p>
           <div className="mt-8 rounded-2xl border border-primary/10 bg-white p-6">
             <p className="text-sm text-charcoal/60">
@@ -216,7 +216,7 @@ export default function HomePage() {
           <div className="text-center">
             <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">Simple, fair pricing</h2>
             <p className="mx-auto mt-4 max-w-xl text-charcoal/60">
-              Start free. Upgrade when you're ready.
+              Start free. Upgrade when you&apos;re ready.
             </p>
           </div>
           <div className="mt-16 grid gap-6 lg:grid-cols-4">
