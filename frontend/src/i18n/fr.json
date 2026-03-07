@@ -1,0 +1,129 @@
+{
+  "common": {
+    "appName": "NKOM",
+    "tagline": "De la Scientia à la Sapientia. La sagesse rencontre la science.",
+    "signIn": "Se connecter",
+    "signUp": "Commencer gratuitement",
+    "logout": "Se déconnecter",
+    "back": "Retour",
+    "home": "Accueil",
+    "about": "À propos",
+    "pricing": "Tarification",
+    "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche"
+  },
+  "landing": {
+    "hero": {
+      "title": "Une sagesse qui reste",
+      "subtitle": "Enregistrez votre cours. Téléchargez vos notes. Obtenez des matériels d'études personnalisés instantanément. Retenez 90% de ce que vous étudiez — pas seulement 10%.",
+      "cta": "Commencer à étudier plus intelligemment",
+      "secondary": "Voir comment ça marche",
+      "freeNote": "Plan gratuit à vie. Aucune carte de crédit requise."
+    },
+    "features": {
+      "title": "Votre connaissance, votre façon",
+      "subtitle": "Téléchargez N'IMPORTE QUEL matériel et obtenez des outils d'études personnalisés instantanément.",
+      "instantRecording": {
+        "title": "Enregistrement Instantané",
+        "desc": "Enregistrement d'un seul tapotement avec transcription automatique. Capturez chaque cours instantanément."
+      },
+      "uploadAnything": {
+        "title": "Téléchargez Tout",
+        "desc": "Photos, audio, PDF, texte — téléchargez ce qui vous convient."
+      },
+      "aiPowered": {
+        "title": "Matériels Alimentés par l'IA",
+        "desc": "Résumés, flashcards, quiz — tout généré instantanément à partir de votre contenu."
+      },
+      "learnYourWay": {
+        "title": "Apprenez À Votre Façon",
+        "desc": "Formats personnalisés pour comment VOTRE cerveau apprend le mieux."
+      },
+      "smartRepetition": {
+        "title": "Répétition Intelligente",
+        "desc": "Mémorisez davantage avec des calendriers d'examen minutés scientifiquement."
+      },
+      "trackProgress": {
+        "title": "Suivre la Progression",
+        "desc": "Voyez ce que vous maîtrisez. Célébrez vos victoires. Améliorez-vous continuellement."
+      }
+    },
+    "howItWorks": {
+      "title": "Du cours à la maîtrise en 3 étapes",
+      "step1": "Enregistrer ou Télécharger",
+      "step1Desc": "Tapotez pour enregistrer. Ou téléchargez des photos, audio, PDF, texte.",
+      "step2": "L'IA Transforme",
+      "step2Desc": "Notre IA extrait les concepts et génère les matériels d'études dont vous avez besoin.",
+      "step3": "Apprendre et Maîtriser",
+      "step3Desc": "Révisez intelligemment avec la répétition espacée. Regardez votre rétention s'envoler."
+    },
+    "formats": {
+      "title": "Apprenez dans le format qui vous convient",
+      "subtitle": "D'un seul téléchargement, obtenez tout ce dont vous avez besoin.",
+      "summaries": "Résumés",
+      "summariesDesc": "Concepts clés organisés clairement",
+      "flashcards": "Flashcards",
+      "flashcardsDesc": "Cartes de rappel actif",
+      "quizzes": "Quiz",
+      "quizzesDesc": "Testez vos connaissances"
+    },
+    "science": {
+      "title": "Basé sur la science de l'apprentissage",
+      "desc": "NKOM est fondé sur la recherche en neurosciences et les principes d'apprentissage éprouvés. Votre cerveau apprend mieux quand le contenu est personnalisé, interactif et espacé dans le temps. C'est exactement comment fonctionne NKOM."
+    },
+    "pricing": {
+      "title": "Tarification simple et équitable",
+      "subtitle": "Commencez gratuitement. Mettez à niveau quand vous êtes prêt.",
+      "free": "Gratuit",
+      "student": "Étudiant",
+      "pro": "Pro"
+    },
+    "cta": {
+      "title": "Prêt à étudier plus intelligemment?",
+      "subtitle": "Rejoignez les étudiants d'Afrique qui apprennent plus efficacement et retiennent davantage de ce qu'ils étudient.",
+      "button": "Commencez votre essai gratuit",
+      "note": "Plan gratuit à vie • Aucune carte de crédit requise"
+    }
+  },
+  "dashboard": {
+    "upload": {
+      "title": "Ajouter votre matériel d'apprentissage",
+      "subtitle": "Choisissez comment vous voulez partager vos connaissances.",
+      "record": "Enregistrer",
+      "recordDesc": "Cours ou note vocale",
+      "upload": "Télécharger",
+      "uploadDesc": "Photo, PDF ou fichier",
+      "text": "Texte",
+      "textDesc": "Collez vos notes",
+      "recording": "Enregistrement de votre matériel",
+      "recordingDesc": "Enregistrez jusqu'à 2 heures d'audio. Nous les transcrirons et les analyserons.",
+      "startRecording": "Commencer l'enregistrement",
+      "stopRecording": "Arrêter l'enregistrement",
+      "uploadButton": "Télécharger",
+      "discardButton": "Abandonner",
+      "uploading": "Téléchargement de votre contenu...",
+      "uploadSuccess": "Matériel téléchargé!",
+      "uploadSuccessDesc": "Votre contenu a été téléchargé et est en cours de traitement.",
+      "viewMaterials": "Afficher les matériels",
+      "uploadAnother": "Télécharger un autre"
+    },
+    "materials": {
+      "title": "Matériels d'Études",
+      "subtitle": "matériels dans votre bibliothèque",
+      "addMaterial": "Ajouter un matériel",
+      "search": "Rechercher des matériels..."
+    }
+  },
+  "auth": {
+    "signIn": "Se Connecter",
+    "signUp": "S'Inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "country": "Pays",
+    "createAccount": "Créer un compte",
+    "haveAccount": "Vous avez déjà un compte?",
+    "noAccount": "Vous n'avez pas de compte?"
+  }
+}
