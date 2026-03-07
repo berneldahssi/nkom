@@ -29,7 +29,7 @@ export default function DashboardPage() {
 
   const recentMaterials = [
     { id: "1", title: "Introduction to Cell Biology", subject: "Biology", date: "2 hours ago", formats: ["summary", "flashcards", "quiz"], progress: 75 },
-    { id: "2", title: "French Revolution Notes", subject: "History", date: "Yesterday", formats: ["summary", "podcast", "flashcards"], progress: 45 },
+    { id: "2", title: "French Revolution Notes", subject: "History", date: "Yesterday", formats: ["summary", "flashcards"], progress: 45 },
     { id: "3", title: "Linear Algebra - Ch. 3", subject: "Mathematics", date: "2 days ago", formats: ["summary", "flashcards"], progress: 90 },
   ];
 

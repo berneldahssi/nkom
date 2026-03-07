@@ -166,10 +166,6 @@ async def get_recording_status(
         "summary": any(m.material_type == "summary" for m in materials),
         "flashcards": any(m.material_type == "flashcards" for m in materials),
         "quiz": any(m.material_type == "quiz" for m in materials),
-        "podcast": any(m.material_type == "podcast" for m in materials),
-        "concept_map": any(m.material_type == "concept_map" for m in materials),
-        "memory_palace": any(m.material_type == "memory_palace" for m in materials),
-        "practice_problems": any(m.material_type == "practice_problems" for m in materials),
     }
 
     # Determine overall status

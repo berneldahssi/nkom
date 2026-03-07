@@ -5,12 +5,9 @@ import { useState } from "react";
 import {
   ArrowLeft,
   BookOpen,
-  Headphones,
   Layers,
   GraduationCap,
   Brain,
-  Play,
-  Pause,
   RotateCcw,
   ChevronRight,
   Check,
@@ -18,13 +15,12 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-type Tab = "summary" | "flashcards" | "quiz" | "podcast";
+type Tab = "summary" | "flashcards" | "quiz";
 
 export default function MaterialDetailPage() {
   const [activeTab, setActiveTab] = useState<Tab>("summary");
   const [currentCard, setCurrentCard] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [playing, setPlaying] = useState(false);
 
   const material = {
     title: "Introduction to Cell Biology",
@@ -54,7 +50,6 @@ export default function MaterialDetailPage() {
     { key: "summary", icon: <BookOpen size={16} />, label: "Summary" },
     { key: "flashcards", icon: <Layers size={16} />, label: `Flashcards (${material.flashcards.length})` },
     { key: "quiz", icon: <GraduationCap size={16} />, label: `Quiz (${material.quizQuestions.length})` },
-    { key: "podcast", icon: <Headphones size={16} />, label: "Podcast" },
   ];
 
   return (
@@ -194,46 +189,6 @@ export default function MaterialDetailPage() {
         )}
 
         {activeTab === "quiz" && <QuizView questions={material.quizQuestions} />}
-
-        {activeTab === "podcast" && (
-          <div className="rounded-2xl border border-primary/10 bg-white p-8">
-            <div className="text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                <Headphones size={32} className="text-primary" />
-              </div>
-              <h3 className="mt-4 font-heading text-lg font-semibold text-primary">Audio Podcast</h3>
-              <p className="mt-1 text-sm text-charcoal/50">AI-generated audio summary of this material</p>
-            </div>
-            {/* Audio player */}
-            <div className="mt-8 rounded-xl bg-neutral p-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setPlaying(!playing)}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-white hover:bg-primary-600"
-                >
-                  {playing ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
-                </button>
-                <div className="flex-1">
-                  <div className="h-2 rounded-full bg-primary/15">
-                    <div className="h-full w-1/3 rounded-full bg-primary" />
-                  </div>
-                  <div className="mt-1 flex justify-between text-xs text-charcoal/40">
-                    <span>2:34</span>
-                    <span>7:45</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 rounded-xl border border-primary/5 p-4">
-              <p className="text-xs font-medium uppercase text-charcoal/30">Transcript</p>
-              <p className="mt-2 text-sm leading-relaxed text-charcoal/60">
-                Welcome to your NKOM study podcast on Cell Biology. Today we will explore the fundamental building blocks of life...
-                Cells are the basic structural and functional units of all living organisms. There are two main types:
-                prokaryotic cells, which lack a nucleus, and eukaryotic cells, which contain a membrane-bound nucleus...
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

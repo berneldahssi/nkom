@@ -113,7 +113,7 @@ export default function AboutPage() {
               </div>
               <h3 className="mb-3 font-heading text-lg font-bold text-primary">Interactive</h3>
               <p className="text-sm text-charcoal/70">
-                Passive reading doesn&apos;t stick. We create summaries, flashcards, quizzes, and podcasts that actively engage your brain.
+                Passive reading doesn&apos;t stick. We create summaries, flashcards, and quizzes that actively engage your brain.
               </p>
             </div>
 

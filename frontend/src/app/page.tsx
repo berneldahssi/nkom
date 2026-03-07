@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   BookOpen,
-  Headphones,
   Sparkles,
   Upload,
   Zap,
@@ -15,6 +14,7 @@ import {
   ChevronRight,
   GraduationCap,
   Brain,
+  Mic,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -149,17 +149,17 @@ export default function HomePage() {
             </p>
           </div>
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard icon={<Zap className="h-6 w-6" />} color="gold" title="Record Lectures"
-              description="One-tap recording with automatic transcription. Capture every explanation." />
+            <FeatureCard icon={<Mic className="h-6 w-6" />} color="gold" title="Instant Recording"
+              description="One-tap recording with automatic transcription. Capture every lecture instantly." />
             <FeatureCard icon={<Upload className="h-6 w-6" />} color="terracotta" title="Upload Anything"
               description="Photos, audio, PDFs, text — upload what works for you." />
             <FeatureCard icon={<Brain className="h-6 w-6" />} color="primary" title="AI-Powered Materials"
-              description="Summaries, flashcards, podcasts, quizzes — all generated instantly." />
+              description="Summaries, flashcards, quizzes — all generated instantly from your content." />
             <FeatureCard icon={<Sparkles className="h-6 w-6" />} color="terracotta" title="Learn Your Way"
               description="Personalized formats for how YOUR brain learns best." />
             <FeatureCard icon={<BarChart3 className="h-6 w-6" />} color="gold" title="Smart Repetition"
               description="Remember more with scientifically-timed review schedules." />
-            <FeatureCard icon={<Headphones className="h-6 w-6" />} color="primary" title="Track Progress"
+            <FeatureCard icon={<BarChart3 className="h-6 w-6" />} color="primary" title="Track Progress"
               description="See what you&apos;re mastering. Celebrate wins. Improve continuously." />
           </div>
         </div>
@@ -188,9 +188,8 @@ export default function HomePage() {
               From a single upload, get everything you need.
             </p>
           </div>
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-16 grid gap-4 sm:grid-cols-3">
             <FormatCard icon={<BookOpen size={28} />} title="Summaries" description="Key concepts organized clearly" />
-            <FormatCard icon={<Headphones size={28} />} title="Podcasts" description="Listen on the go" />
             <FormatCard icon={<Sparkles size={28} />} title="Flashcards" description="Active recall cards" />
             <FormatCard icon={<GraduationCap size={28} />} title="Quizzes" description="Test your knowledge" />
           </div>
@@ -221,19 +220,16 @@ export default function HomePage() {
               Start free. Upgrade when you&apos;re ready.
             </p>
           </div>
-          <div className="mt-16 grid gap-6 lg:grid-cols-4">
+          <div className="mt-16 grid gap-6 lg:grid-cols-3">
             <PricingCard tier="Free" price="$0" period="forever" description="Get started with the basics"
-              features={["5 uploads/month", "Summaries & flashcards", "Progress tracking"]}
+              features={["5 uploads/month", "Summaries & flashcards", "Basic progress tracking"]}
               cta="Get started" href="/auth?mode=register" />
             <PricingCard tier="Student" price="$8" period="/month" description="Everything you need"
-              features={["Unlimited uploads", "All output formats", "Audio podcasts", "Spaced repetition", "Analytics"]}
+              features={["Unlimited uploads", "Summaries, flashcards & quizzes", "Spaced repetition", "Full analytics"]}
               cta="Start free trial" href="/auth?mode=register&plan=student" highlighted />
             <PricingCard tier="Pro" price="$15" period="/month" description="For serious learners"
-              features={["Everything in Student", "Advanced analytics", "Skill tracking", "Export materials", "Priority support"]}
+              features={["Everything in Student", "Advanced analytics", "Export materials", "Priority support"]}
               cta="Start free trial" href="/auth?mode=register&plan=pro" />
-            <PricingCard tier="Family" price="$25" period="/month" description="Multiple learners"
-              features={["4 accounts included", "Parent dashboard", "Shared materials", "All Pro features"]}
-              cta="Start free trial" href="/auth?mode=register&plan=family" />
           </div>
         </div>
       </section>

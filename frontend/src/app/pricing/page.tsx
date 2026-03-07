@@ -11,15 +11,10 @@ const plans = [
     description: "Get started with the basics",
     features: [
       "5 content uploads/month",
-      "Basic text summaries",
+      "Text summaries",
       "3 flashcards per material",
-      "Limited quiz questions",
+      "Basic quiz questions",
       "Community support",
-    ],
-    limitations: [
-      "No audio podcasts",
-      "No visual generation",
-      "No exam simulation",
     ],
     cta: "Get started",
     href: "/auth?mode=register",
@@ -31,8 +26,7 @@ const plans = [
     description: "Everything you need to excel",
     features: [
       "Unlimited content uploads",
-      "All output formats",
-      "Audio podcast generation",
+      "Full summaries, flashcards & quizzes",
       "Spaced repetition system",
       "Full progress tracking",
       "Unlimited flashcards",
@@ -49,37 +43,17 @@ const plans = [
     description: "For serious learners",
     features: [
       "Everything in Student",
-      "Visual/manga generation",
-      "Exam simulation (BAC/GCE/SAT)",
-      "Skill transformation module",
-      "Memory palace builder",
       "Advanced analytics",
+      "Export materials",
       "Priority support",
     ],
     cta: "Start 7-day free trial",
     href: "/auth?mode=register&plan=pro",
   },
-  {
-    tier: "Family",
-    price: "$25",
-    period: "/month",
-    description: "Support your family's education",
-    features: [
-      "Everything in Pro",
-      "4 accounts included",
-      "Parent monitoring dashboard",
-      "Shared study materials",
-      "Family progress reports",
-      "Dedicated support",
-    ],
-    cta: "Start 7-day free trial",
-    href: "/auth?mode=register&plan=family",
-  },
 ];
 
 const faqs = [
   { q: "Can I switch plans at any time?", a: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle." },
-  { q: "Is there a student discount?", a: "Yes! Students with a valid .edu email address get an additional 20% off any paid plan." },
   { q: "What payment methods do you accept?", a: "We accept all major credit cards, PayPal, and mobile money (MTN, Orange) for African users." },
   { q: "Can I cancel anytime?", a: "Absolutely. There are no contracts or cancellation fees. You can cancel from your settings page at any time." },
   { q: "Do you offer special pricing for Africa?", a: "Yes! We offer 50% discounted pricing for users in African countries to make quality education accessible." },
@@ -112,17 +86,10 @@ export default function PricingPage() {
           <p className="mx-auto mt-4 max-w-xl text-charcoal/60">
             Start free, upgrade when you&apos;re ready. Special pricing available for African students.
           </p>
-          <div className="mt-4 flex items-center justify-center gap-3 text-sm">
-            <span className="text-charcoal/50">Monthly</span>
-            <button className="relative h-6 w-11 rounded-full bg-primary">
-              <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow" />
-            </button>
-            <span className="text-charcoal/50">Annual <span className="font-semibold text-terracotta">(Save 17%)</span></span>
-          </div>
         </div>
 
         {/* Plans */}
-        <div className="mt-12 grid gap-6 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {plans.map((plan) => (
             <div
               key={plan.tier}
@@ -162,18 +129,6 @@ export default function PricingPage() {
               </Link>
             </div>
           ))}
-        </div>
-
-        {/* B2B */}
-        <div className="mt-16 rounded-2xl bg-primary p-8 text-center sm:p-12">
-          <h2 className="font-heading text-2xl font-bold text-white">For schools and universities</h2>
-          <p className="mx-auto mt-3 max-w-lg text-primary-100">
-            Get special institutional pricing starting at $3/student/year.
-            Includes admin dashboard, progress monitoring, and dedicated support.
-          </p>
-          <button className="mt-6 rounded-xl bg-white px-8 py-3 font-medium text-primary hover:bg-neutral">
-            Contact sales
-          </button>
         </div>
 
         {/* FAQ */}
