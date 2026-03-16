@@ -72,10 +72,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return typeof value === "string" ? value : key;
   };
 
-  if (!isLoaded) {
-    return <>{children}</>;
-  }
-
   return (
     <LanguageContext.Provider value={{ locale, setLocale, t }}>
       {children}
