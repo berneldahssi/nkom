@@ -236,7 +236,7 @@ This **moat is impossible to replicate** because it's not just AI — it's neuro
 
 ## 3.4 Taglines
 
-**Primary:** "Wisdom that sticks."
+**Primary:** "Own What You Know."
 **Secondary:** "Your knowledge, your way."
 **Tertiary:** "Learn. Understand. Create."
 

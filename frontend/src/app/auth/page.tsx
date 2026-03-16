@@ -46,7 +46,7 @@ export default function AuthPage() {
         </Link>
         <div>
           <h2 className="font-heading text-4xl font-bold leading-tight text-white">
-            Wisdom that sticks.
+            Own What You Know.
           </h2>
           <p className="mt-4 max-w-md text-primary-100">
             Upload your notes, photos, or audio — get personalized learning experiences powered by AI and neuroscience.

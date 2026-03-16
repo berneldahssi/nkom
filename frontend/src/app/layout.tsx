@@ -4,7 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata: Metadata = {
-  title: "NKOM — Wisdom that sticks",
+  title: "NKOM — Own What You Know",
   description:
     "AI-powered personalized learning platform. Upload your notes, get personalized study experiences powered by AI and neuroscience.",
   keywords: ["learning", "AI", "study", "flashcards", "spaced repetition", "education", "NKOM"],

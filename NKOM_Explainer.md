@@ -1,6 +1,6 @@
 # 🧠 NKOM — Complete Explainer for Friends & Family
 
-## **"Wisdom that sticks."**
+## **"Own What You Know."**
 
 ---
 
@@ -262,4 +262,4 @@ The future of education isn't about MORE information—it's about remembering WH
 ---
 
 *Made with 💜 by the NKOM team*
-*Wisdom that sticks.*
+*Own What You Know.*
