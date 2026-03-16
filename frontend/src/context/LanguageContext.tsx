@@ -16,13 +16,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
   const [translations, setTranslations] = useState<Record<string, any>>({});
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Load translations on mount and when locale changes
+  // Load translations on mount and when locale changes (client-side only)
   useEffect(() => {
+    setIsMounted(true);
     const loadTranslations = async () => {
       try {
         // Try to get locale from localStorage
-        const savedLocale = localStorage.getItem("locale") as Locale | null;
+        const savedLocale = typeof window !== "undefined" ? localStorage.getItem("locale") as Locale | null : null;
         const currentLocale = (savedLocale && locales.includes(savedLocale)) ? savedLocale : defaultLocale;
 
         setLocaleState(currentLocale);
@@ -38,7 +40,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     };
 
     loadTranslations();
-  }, []);
+  }, [isMounted]);
 
   const setLocale = async (newLocale: Locale) => {
     if (!locales.includes(newLocale)) return;

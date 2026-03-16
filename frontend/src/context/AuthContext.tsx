@@ -21,9 +21,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Initialize auth state from localStorage
+  // Initialize auth state from localStorage (client-side only)
   useEffect(() => {
+    setIsMounted(true);
     const storedAccessToken = localStorage.getItem("access_token");
     const storedRefreshToken = localStorage.getItem("refresh_token");
 
@@ -42,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setIsLoading(false);
-  }, []);
+  }, [isMounted]);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
