@@ -1,9 +1,10 @@
 """Study session, flashcard review, and quiz endpoints."""
 
+import random
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -155,14 +156,38 @@ async def review_flashcard(
 @router.get("/quiz/{material_id}", response_model=list[QuizQuestionResponse])
 async def get_quiz(
     material_id: uuid.UUID,
+    randomize: bool = Query(True, description="Randomize question order and answers"),
+    limit: int = Query(30, ge=1, le=100, description="Number of questions to return"),
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
 ) -> list[QuizQuestion]:
-    """Get quiz questions for a material."""
+    """Get quiz questions for a material.
+
+    - `randomize`: If true, randomizes question order and shuffles answer options
+    - `limit`: Number of questions to return (for random sampling from larger pools)
+    """
     result = await db.execute(
         select(QuizQuestion).where(QuizQuestion.material_id == material_id)
     )
-    return list(result.scalars().all())
+    questions = list(result.scalars().all())
+
+    # If more questions than limit, randomly sample
+    if len(questions) > limit:
+        questions = random.sample(questions, limit)
+
+    # Randomize question order and shuffle answers if requested
+    if randomize and len(questions) > 0:
+        random.shuffle(questions)
+        # Shuffle answer options for each question
+        for question in questions:
+            if question.options and isinstance(question.options, list):
+                # Keep track of which option is correct before shuffling
+                correct_option = question.correct_answer
+                shuffled_options = question.options.copy()
+                random.shuffle(shuffled_options)
+                question.options = shuffled_options
+
+    return questions
 
 
 @router.post("/quiz/submit", response_model=QuizResultResponse)

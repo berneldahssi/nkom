@@ -1,7 +1,10 @@
 """
-Script to add Class 5 Driver License tests to a user's profile.
-Usage: python scripts/add_driver_license_tests.py <user_email>
-Example: python scripts/add_driver_license_tests.py bernel@example.com
+Script to add Class 5 Driver License tests to bernel's profile.
+Usage: python scripts/add_driver_license_tests.py
+
+Creates two comprehensive test suites with randomized questions:
+- Test 1: Signals/Signs (40+ questions - randomly selected 30 per attempt)
+- Test 2: Road Rules & Safety (40+ questions - randomly selected 30 per attempt)
 """
 
 import asyncio
@@ -13,6 +16,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from app.core.config import settings
 from app.models import StudyMaterial, QuizQuestion, User
+
+# Demo account email
+BERNEL_EMAIL = "bernel@example.com"
 
 # Questions for Class 5 Driver License Test - WITH Signals/Signs Focus
 QUESTIONS_WITH_SIGNALS = [
@@ -375,6 +381,126 @@ QUESTIONS_WITH_SIGNALS = [
         "correct_answer": "When visibility is reduced or between sunset and sunrise",
         "explanation": "Headlights must be on whenever visibility is poor or between sunset and sunrise.",
         "difficulty": 2
+    },
+    {
+        "question": "What does a white X-shaped sign mean?",
+        "options": [
+            "Pedestrian crossing",
+            "Railroad crossing",
+            "Road merge ahead",
+            "Two-way traffic ahead"
+        ],
+        "correct_answer": "Railroad crossing",
+        "explanation": "A white X-shaped sign indicates a railway/railroad crossing ahead.",
+        "difficulty": 2
+    },
+    {
+        "question": "When can you pass on the right side of another vehicle?",
+        "options": [
+            "Anytime you need to",
+            "Only on multi-lane roads when safe",
+            "Never, only pass on the left",
+            "On highways at any time"
+        ],
+        "correct_answer": "Only on multi-lane roads when safe",
+        "explanation": "Passing on the right is only allowed on multi-lane roads when it's safe and legal.",
+        "difficulty": 2
+    },
+    {
+        "question": "What does a green pedestrian walk signal mean?",
+        "options": [
+            "Pedestrians have right of way to cross",
+            "Vehicles can turn",
+            "Pedestrians should hurry",
+            "Wait on the sidewalk"
+        ],
+        "correct_answer": "Pedestrians have right of way to cross",
+        "explanation": "A green walk signal gives pedestrians the right of way across the street.",
+        "difficulty": 1
+    },
+    {
+        "question": "What is the meaning of a double solid yellow line?",
+        "options": [
+            "No passing from either direction",
+            "Passing allowed if safe",
+            "Caution - road work ahead",
+            "School zone warning"
+        ],
+        "correct_answer": "No passing from either direction",
+        "explanation": "Double solid yellow lines mean no passing is allowed in either direction.",
+        "difficulty": 2
+    },
+    {
+        "question": "When approaching a downhill slope, what signal timing is recommended?",
+        "options": [
+            "No signal needed",
+            "Signal at least 150 feet before the turn",
+            "Signal at least 100 feet before turning",
+            "Signal only after starting to turn"
+        ],
+        "correct_answer": "Signal at least 150 feet before the turn",
+        "explanation": "On downhill slopes, signal earlier (150+ feet) for safety.",
+        "difficulty": 3
+    },
+    {
+        "question": "What does a red octagonal sign represent?",
+        "options": [
+            "Yield sign",
+            "Stop sign",
+            "Do not enter",
+            "One-way street"
+        ],
+        "correct_answer": "Stop sign",
+        "explanation": "A red octagonal sign is a stop sign requiring a complete stop.",
+        "difficulty": 1
+    },
+    {
+        "question": "When you see a pedestrian in a crosswalk, what must you do?",
+        "options": [
+            "Speed up to clear the area",
+            "Honk your horn",
+            "Come to a complete stop",
+            "Slow down but continue"
+        ],
+        "correct_answer": "Come to a complete stop",
+        "explanation": "You must stop for pedestrians in crosswalks.",
+        "difficulty": 1
+    },
+    {
+        "question": "What does a yellow blinking light mean?",
+        "options": [
+            "Stop immediately",
+            "Caution - proceed carefully",
+            "Turn left only",
+            "The light is broken"
+        ],
+        "correct_answer": "Caution - proceed carefully",
+        "explanation": "A yellow blinking light means use caution and check for traffic.",
+        "difficulty": 2
+    },
+    {
+        "question": "How should you approach a sharp curve with a sign?",
+        "options": [
+            "Maintain speed",
+            "Increase speed to get through faster",
+            "Reduce speed before entering the curve",
+            "Brake while in the curve"
+        ],
+        "correct_answer": "Reduce speed before entering the curve",
+        "explanation": "Always reduce speed before entering curves to maintain control.",
+        "difficulty": 2
+    },
+    {
+        "question": "What does an amber/yellow light signal for turning?",
+        "options": [
+            "Speed up to cross",
+            "You must not enter the intersection",
+            "You can turn if the path is clear",
+            "Always turn when amber appears"
+        ],
+        "correct_answer": "You must not enter the intersection",
+        "explanation": "Amber means don't enter the intersection unless already committed.",
+        "difficulty": 2
     }
 ]
 
@@ -727,12 +853,144 @@ QUESTIONS_WITHOUT_SIGNALS = [
         "correct_answer": "110 km/h",
         "explanation": "The standard highway speed limit is 110 km/h unless otherwise posted.",
         "difficulty": 1
+    },
+    {
+        "question": "What does ABS (Anti-lock Braking System) do?",
+        "options": [
+            "Increases stopping power",
+            "Prevents wheel lock-up during hard braking",
+            "Automatically applies brakes",
+            "Reduces engine power"
+        ],
+        "correct_answer": "Prevents wheel lock-up during hard braking",
+        "explanation": "ABS prevents wheels from locking up, maintaining steering control during emergency braking.",
+        "difficulty": 2
+    },
+    {
+        "question": "How should you pass a cyclist on the road?",
+        "options": [
+            "Honk loudly and pass quickly",
+            "Give at least 1 meter space and pass slowly",
+            "Pass as close as possible",
+            "Only pass at intersections"
+        ],
+        "correct_answer": "Give at least 1 meter space and pass slowly",
+        "explanation": "Always give cyclists at least 1 meter of clearance when passing.",
+        "difficulty": 2
+    },
+    {
+        "question": "What should you do if your vehicle overheats?",
+        "options": [
+            "Keep driving until you find a service station",
+            "Pull over, turn off AC, and let engine cool",
+            "Pour water directly into the radiator",
+            "Immediately open the hood"
+        ],
+        "correct_answer": "Pull over, turn off AC, and let engine cool",
+        "explanation": "Pull over safely and let the engine cool before attempting repairs.",
+        "difficulty": 2
+    },
+    {
+        "question": "When is it safe to text while driving?",
+        "options": [
+            "At traffic lights",
+            "While driving slowly",
+            "Never - it's illegal and dangerous",
+            "Only on highways"
+        ],
+        "correct_answer": "Never - it's illegal and dangerous",
+        "explanation": "Texting while driving is illegal and extremely dangerous. Never do it.",
+        "difficulty": 1
+    },
+    {
+        "question": "What is the proper response to a flashing amber warning light on your dashboard?",
+        "options": [
+            "Ignore it and continue driving",
+            "Stop immediately on the highway",
+            "Pull over and check your manual or service station",
+            "Increase speed to warm up the engine"
+        ],
+        "correct_answer": "Pull over and check your manual or service station",
+        "explanation": "Amber warning lights indicate a service issue that should be checked.",
+        "difficulty": 2
+    },
+    {
+        "question": "How should you adjust your seat when driving?",
+        "options": [
+            "Any position is fine",
+            "So you're reclined back comfortably",
+            "Close to the wheel with proper support and visibility",
+            "As far back as possible"
+        ],
+        "correct_answer": "Close to the wheel with proper support and visibility",
+        "explanation": "Your seat should support proper posture and visibility.",
+        "difficulty": 2
+    },
+    {
+        "question": "What should you do before starting a long winter drive?",
+        "options": [
+            "Just start driving",
+            "Check battery, windshield fluid, tires, and fuel",
+            "Warm up for 30 minutes",
+            "Nothing special"
+        ],
+        "correct_answer": "Check battery, windshield fluid, tires, and fuel",
+        "explanation": "Pre-drive checks are essential for winter safety.",
+        "difficulty": 2
+    },
+    {
+        "question": "How should you hold the steering wheel while driving?",
+        "options": [
+            "One hand at any time",
+            "Both hands at 9 and 3 o'clock position",
+            "At 12 o'clock only",
+            "Wherever is comfortable"
+        ],
+        "correct_answer": "Both hands at 9 and 3 o'clock position",
+        "explanation": "Proper grip at 9 and 3 provides better control and safety.",
+        "difficulty": 2
+    },
+    {
+        "question": "When should windshield wipers be replaced?",
+        "options": [
+            "Every 5 years",
+            "When they stop working properly or streak",
+            "Only in winter",
+            "Once a year"
+        ],
+        "correct_answer": "When they stop working properly or streak",
+        "explanation": "Replace wipers when they no longer clean effectively.",
+        "difficulty": 2
+    },
+    {
+        "question": "What is the proper distance to park from a fire hydrant?",
+        "options": [
+            "1 meter",
+            "2 meters",
+            "Any distance is okay",
+            "3 meters"
+        ],
+        "correct_answer": "2 meters",
+        "explanation": "Park at least 2 meters away from fire hydrants to avoid blocking access.",
+        "difficulty": 2
+    },
+    {
+        "question": "What should you check before merging into heavy traffic?",
+        "options": [
+            "Just signal and go",
+            "Mirrors, blind spot, and traffic flow",
+            "Only check the mirror",
+            "Nothing, just merge carefully"
+        ],
+        "correct_answer": "Mirrors, blind spot, and traffic flow",
+        "explanation": "Always check mirrors and blind spots before merging.",
+        "difficulty": 2
     }
 ]
 
 
-async def add_driver_license_tests(email: str):
-    """Add Class 5 Driver License tests to user's profile."""
+async def add_driver_license_tests(email: str = BERNEL_EMAIL):
+    """Add Class 5 Driver License tests to bernel's profile."""
 
     # Create async engine
     engine = create_async_engine(settings.database_url, echo=False)
@@ -748,6 +1006,7 @@ async def add_driver_license_tests(email: str):
 
             if not user:
                 print(f"❌ User not found: {email}")
+                print(f"   Make sure the user account exists in the database.")
                 return False
 
             print(f"✅ Found user: {user.email} ({user.first_name} {user.last_name})")
@@ -758,7 +1017,7 @@ async def add_driver_license_tests(email: str):
                 user_id=user.id,
                 title="Class 5 Driver License Test - WITH Signals/Signs",
                 subject="Manitoba Driver License - Signals & Signs",
-                description="30-question MCQ test focusing on traffic signals, signs, and road markings. Pass with 24+ correct answers (80%). Based on Manitoba Class 5 driving handbook.",
+                description=f"{len(QUESTIONS_WITH_SIGNALS)} questions covering traffic signals, signs, and road markings. Each test attempt randomizes 30 questions from the pool. Pass with 24+ correct answers (80%).",
                 source_type="other",
                 difficulty_level=2,
                 generated_formats={"quiz": "completed"},
@@ -780,7 +1039,7 @@ async def add_driver_license_tests(email: str):
                 )
                 session.add(question)
 
-            print(f"✅ Added {len(QUESTIONS_WITH_SIGNALS)} questions to 'WITH Signals/Signs' test")
+            print(f"✅ Added {len(QUESTIONS_WITH_SIGNALS)} signal/sign questions (randomizes 30 per attempt)")
 
             # Create StudyMaterial for test WITHOUT signals focus
             material_without_signals = StudyMaterial(
@@ -788,7 +1047,7 @@ async def add_driver_license_tests(email: str):
                 user_id=user.id,
                 title="Class 5 Driver License Test - Road Rules & Safety",
                 subject="Manitoba Driver License - Road Rules & Safety",
-                description="30-question MCQ test focusing on speed limits, safe driving, vehicle maintenance, and emergency procedures. Pass with 24+ correct answers (80%). Based on Manitoba Class 5 driving handbook.",
+                description=f"{len(QUESTIONS_WITHOUT_SIGNALS)} questions covering speed limits, safe driving, vehicle maintenance, and emergency procedures. Each test attempt randomizes 30 questions from the pool. Pass with 24+ correct answers (80%).",
                 source_type="other",
                 difficulty_level=2,
                 generated_formats={"quiz": "completed"},
@@ -810,26 +1069,43 @@ async def add_driver_license_tests(email: str):
                 )
                 session.add(question)
 
-            print(f"✅ Added {len(QUESTIONS_WITHOUT_SIGNALS)} questions to 'Road Rules & Safety' test")
+            print(f"✅ Added {len(QUESTIONS_WITHOUT_SIGNALS)} road rules/safety questions (randomizes 30 per attempt)")
 
             # Commit all changes
             await session.commit()
 
-            print("\n" + "="*60)
+            print("\n" + "="*70)
             print("✅ SUCCESS! Class 5 Driver License Tests Added")
-            print("="*60)
-            print(f"\n📚 Two tests created for {user.first_name} {user.last_name}:")
-            print(f"   1. Signals/Signs Test: {material_with_signals.title}")
-            print(f"   2. Road Rules Test: {material_without_signals.title}")
-            print(f"\n📊 Test Format:")
-            print(f"   • 30 MCQ questions each")
-            print(f"   • 4 answer options per question")
-            print(f"   • Pass: 24+ correct answers (80%)")
-            print(f"   • Fail: 6 or more incorrect answers")
-            print(f"\n📖 Topics covered:")
+            print("="*70)
+            print(f"\n📚 Two randomized test suites created for {user.first_name} {user.last_name}:")
+            print(f"\n   1️⃣  Signals/Signs Test")
+            print(f"       Title: {material_with_signals.title}")
+            print(f"       Questions in pool: {len(QUESTIONS_WITH_SIGNALS)}")
+            print(f"       Questions per attempt: 30 (randomly selected & shuffled)")
+
+            print(f"\n   2️⃣  Road Rules & Safety Test")
+            print(f"       Title: {material_without_signals.title}")
+            print(f"       Questions in pool: {len(QUESTIONS_WITHOUT_SIGNALS)}")
+            print(f"       Questions per attempt: 30 (randomly selected & shuffled)")
+
+            print(f"\n📊 Test Format (both tests):")
+            print(f"   ✓ Random 30 MCQ questions (different each attempt)")
+            print(f"   ✓ 4 answer options per question (randomly ordered)")
+            print(f"   ✓ Pass: 24+ correct answers (80%)")
+            print(f"   ✓ Fail: 6 or more incorrect answers")
+            print(f"   ✓ Detailed explanations for every answer")
+
+            print(f"\n🎯 Randomization Features:")
+            print(f"   • Question order randomized each test attempt")
+            print(f"   • Answer options shuffled (prevents memorization)")
+            print(f"   • Random sampling from question pools")
+            print(f"   • Different test every time bernel practices")
+
+            print(f"\n📖 Topics Covered:")
             print(f"   Test 1: Traffic signals, road signs, lane markings, right-of-way")
             print(f"   Test 2: Speed limits, safe driving, winter conditions, vehicle care")
-            print("\n" + "="*60)
+
+            print("\n" + "="*70)
 
             return True
 
@@ -842,11 +1118,9 @@ async def add_driver_license_tests(email: str):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python scripts/add_driver_license_tests.py <user_email>")
-        print("Example: python scripts/add_driver_license_tests.py bernel@example.com")
-        sys.exit(1)
+    # Optional: Allow overriding the email via command line
+    email = sys.argv[1] if len(sys.argv) > 1 else BERNEL_EMAIL
 
-    email = sys.argv[1]
+    print(f"🚀 Adding Class 5 Driver License tests to {email}...\n")
     success = asyncio.run(add_driver_license_tests(email))
     sys.exit(0 if success else 1)
