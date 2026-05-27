@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { TriangleAlert, RefreshCw } from "lucide-react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral px-6 text-center">
       <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-error/10">
-        <TriangleAlert size={44} className="text-error" />
+        <AlertTriangle size={44} className="text-error" />
       </div>
       <div>
         <h1 className="font-heading text-2xl font-bold text-primary">Something went wrong</h1>

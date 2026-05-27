@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -33,7 +33,7 @@ export default function ReviewPage() {
   const currentCard = flashcards[currentIndex];
   const isDone = reviewed.length === flashcards.length;
 
-  const handleRate = (rating: Rating) => {
+  const handleRate = useCallback((rating: Rating) => {
     setReviewed((r) => [...r, { id: currentCard.id, rating }]);
     setFlipped(false);
     setShowHint(false);
@@ -45,7 +45,7 @@ export default function ReviewPage() {
       const firstUnreviewed = flashcards.findIndex((c) => !reviewedIds.has(c.id));
       if (firstUnreviewed !== -1) setCurrentIndex(firstUnreviewed);
     }
-  };
+  }, [currentCard, currentIndex, flashcards, reviewed]);
 
   useEffect(() => {
     if (isDone) return;
@@ -64,7 +64,7 @@ export default function ReviewPage() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [flipped, isDone, currentIndex, reviewed]);
+  }, [flipped, isDone, handleRate]);
 
   if (isDone) {
     const ratings = { again: 0, hard: 0, good: 0, easy: 0 };
