@@ -27,127 +27,106 @@ provider "aws" {
   }
 }
 
-# ── Networking ───────────────────────────────────────────────────
-
+# VPC and Networking
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  source = "./modules/vpc"
 
-  name = "${var.project_name}-vpc"
-  cidr = "10.0.0.0/16"
-
-  azs             = ["${var.aws_region}a", "${var.aws_region}b"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
-
-  enable_nat_gateway   = true
-  single_nat_gateway   = true  # Cost optimization for MVP
-  enable_dns_hostnames = true
+  project_name         = var.project_name
+  vpc_cidr             = var.vpc_cidr
+  availability_zones   = data.aws_availability_zones.available.names
+  private_subnet_cidrs = var.private_subnet_cidrs
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  single_nat_gateway   = var.environment != "production"
+  flow_log_retention_days = var.flow_log_retention_days
 }
 
-# ── Database ─────────────────────────────────────────────────────
+# Encryption Keys
+module "kms" {
+  source = "./modules/kms"
 
-resource "aws_db_instance" "postgres" {
-  identifier     = "${var.project_name}-postgres"
-  engine         = "postgres"
-  engine_version = "15.4"
-  instance_class = var.db_instance_class
+  project_name            = var.project_name
+  deletion_window_days    = var.kms_deletion_window_days
+}
 
-  allocated_storage     = 20
-  max_allocated_storage = 100
-  storage_encrypted     = true
+# Security Groups
+module "security_groups" {
+  source = "./modules/security_groups"
 
-  db_name  = "nkom"
-  username = var.db_username
-  password = var.db_password
+  project_name    = var.project_name
+  vpc_id          = module.vpc.vpc_id
+  vpc_cidr        = var.vpc_cidr
+  create_alb_rule = false
+}
 
-  vpc_security_group_ids = [aws_security_group.rds.id]
-  db_subnet_group_name   = aws_db_subnet_group.main.name
+# RDS PostgreSQL
+module "rds" {
+  source = "./modules/rds"
 
-  backup_retention_period = 7
-  multi_az                = false  # Enable in production scale
+  project_name            = var.project_name
+  private_subnet_ids      = module.vpc.private_subnets
+  security_group_id       = module.security_groups.rds_security_group_id
+  kms_key_arn             = module.kms.rds_key_arn
+  engine_version          = var.rds_engine_version
+  instance_class          = var.db_instance_class
+  allocated_storage       = var.db_allocated_storage
+  max_allocated_storage   = var.db_max_allocated_storage
+  database_name           = var.db_name
+  db_username             = var.db_username
+  db_password             = var.db_password
+  backup_retention_days   = var.db_backup_retention_days
+  backup_window           = var.db_backup_window
+  maintenance_window      = var.db_maintenance_window
+  multi_az                = var.environment == "production" ? true : false
+  deletion_protection     = var.environment == "production" ? true : false
   skip_final_snapshot     = var.environment != "production"
-
-  tags = { Name = "${var.project_name}-postgres" }
+  enable_monitoring       = var.environment == "production"
+  enable_performance_insights = var.environment == "production"
 }
 
-resource "aws_db_subnet_group" "main" {
-  name       = "${var.project_name}-db-subnets"
-  subnet_ids = module.vpc.private_subnets
+# ElastiCache Redis
+module "redis" {
+  source = "./modules/redis"
+
+  project_name               = var.project_name
+  private_subnet_ids         = module.vpc.private_subnets
+  security_group_id          = module.security_groups.redis_security_group_id
+  engine_version             = var.redis_engine_version
+  engine_version_short       = "70"
+  node_type                  = var.redis_node_type
+  num_cache_nodes            = var.environment == "production" ? 2 : 1
+  auth_token                 = var.redis_auth_token
+  automatic_failover_enabled = var.environment == "production"
+  maintenance_window         = var.redis_maintenance_window
+  notification_topic_arn     = var.environment == "production" ? module.monitoring.alerts_topic_arn : null
 }
 
-# ── Cache ────────────────────────────────────────────────────────
+# S3 Storage
+module "s3" {
+  source = "./modules/s3"
 
-resource "aws_elasticache_cluster" "redis" {
-  cluster_id           = "${var.project_name}-redis"
-  engine               = "redis"
-  engine_version       = "7.0"
-  node_type            = "cache.t3.micro"
-  num_cache_nodes      = 1
-  parameter_group_name = "default.redis7"
-  subnet_group_name    = aws_elasticache_subnet_group.main.name
-  security_group_ids   = [aws_security_group.redis.id]
+  project_name             = var.project_name
+  kms_key_arn              = module.kms.s3_key_arn
+  version_expiration_days  = var.s3_version_expiration_days
+  object_expiration_days   = var.s3_object_expiration_days
+  logs_expiration_days     = var.s3_logs_expiration_days
 }
 
-resource "aws_elasticache_subnet_group" "main" {
-  name       = "${var.project_name}-cache-subnets"
-  subnet_ids = module.vpc.private_subnets
+# Monitoring
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  project_name         = var.project_name
+  aws_region           = var.aws_region
+  log_retention_days   = var.log_retention_days
+  alert_email          = var.alert_email
+  create_rds_alarms    = var.environment == "production"
+  create_redis_alarms  = var.environment == "production"
+  create_dashboard     = var.environment == "production"
+  rds_instance_id      = module.rds.db_instance_id
+  redis_cluster_id     = module.redis.redis_cluster_id
 }
 
-# ── Storage ──────────────────────────────────────────────────────
-
-resource "aws_s3_bucket" "uploads" {
-  bucket = "${var.project_name}-user-uploads"
-}
-
-resource "aws_s3_bucket_versioning" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
-  versioning_configuration { status = "Enabled" }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "uploads" {
-  bucket                  = aws_s3_bucket.uploads.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-# ── Security Groups ──────────────────────────────────────────────
-
-resource "aws_security_group" "rds" {
-  name_prefix = "${var.project_name}-rds-"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [] # TODO: Add ECS security group
-  }
-
-  tags = { Name = "${var.project_name}-rds" }
-}
-
-resource "aws_security_group" "redis" {
-  name_prefix = "${var.project_name}-redis-"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    from_port       = 6379
-    to_port         = 6379
-    protocol        = "tcp"
-    security_groups = [] # TODO: Add ECS security group
-  }
-
-  tags = { Name = "${var.project_name}-redis" }
+# Data source for availability zones
+data "aws_availability_zones" "available" {
+  state = "available"
 }

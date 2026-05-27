@@ -8,7 +8,6 @@ import {
   Filter,
   Plus,
   BookOpen,
-  Headphones,
   Layers,
   GraduationCap,
   Clock,
@@ -17,13 +16,13 @@ import {
 
 const materials = [
   { id: "1", title: "Introduction to Cell Biology", subject: "Biology", date: "Feb 10, 2026", formats: ["summary", "flashcards", "quiz"], progress: 75, cards: 12 },
-  { id: "2", title: "French Revolution Notes", subject: "History", date: "Feb 9, 2026", formats: ["summary", "podcast", "flashcards"], progress: 45, cards: 15 },
+  { id: "2", title: "French Revolution Notes", subject: "History", date: "Feb 9, 2026", formats: ["summary", "flashcards"], progress: 45, cards: 15 },
   { id: "3", title: "Linear Algebra - Chapter 3", subject: "Mathematics", date: "Feb 8, 2026", formats: ["summary", "flashcards"], progress: 90, cards: 8 },
   { id: "4", title: "Organic Chemistry Reactions", subject: "Chemistry", date: "Feb 7, 2026", formats: ["summary", "flashcards", "quiz"], progress: 60, cards: 20 },
-  { id: "5", title: "Shakespeare's Hamlet Analysis", subject: "Literature", date: "Feb 6, 2026", formats: ["summary", "podcast"], progress: 30, cards: 0 },
+  { id: "5", title: "Shakespeare's Hamlet Analysis", subject: "Literature", date: "Feb 6, 2026", formats: ["summary"], progress: 30, cards: 0 },
   { id: "6", title: "Data Structures & Algorithms", subject: "Computer Science", date: "Feb 5, 2026", formats: ["summary", "flashcards", "quiz"], progress: 85, cards: 18 },
   { id: "7", title: "Macroeconomics Principles", subject: "Economics", date: "Feb 4, 2026", formats: ["summary", "flashcards"], progress: 20, cards: 10 },
-  { id: "8", title: "Human Anatomy - Nervous System", subject: "Biology", date: "Feb 3, 2026", formats: ["summary", "flashcards", "quiz", "podcast"], progress: 55, cards: 25 },
+  { id: "8", title: "Human Anatomy - Nervous System", subject: "Biology", date: "Feb 3, 2026", formats: ["summary", "flashcards", "quiz"], progress: 55, cards: 25 },
 ];
 
 const subjects = ["All", "Biology", "History", "Mathematics", "Chemistry", "Literature", "Computer Science", "Economics"];
@@ -41,7 +40,6 @@ export default function MaterialsPage() {
   const formatIcon = (f: string) => {
     switch (f) {
       case "summary": return <BookOpen size={12} />;
-      case "podcast": return <Headphones size={12} />;
       case "flashcards": return <Layers size={12} />;
       case "quiz": return <GraduationCap size={12} />;
       default: return null;

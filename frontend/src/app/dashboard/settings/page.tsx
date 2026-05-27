@@ -120,8 +120,8 @@ export default function SettingsPage() {
               <p className="mt-1 text-sm text-charcoal/50">How do you learn best? This helps us personalize your content.</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {[
-                  { key: "visual", icon: <Eye size={20} />, label: "Visual", description: "Diagrams, charts, color-coding, manga", selected: true },
-                  { key: "auditory", icon: <Headphones size={20} />, label: "Auditory", description: "Podcasts, narration, discussions" },
+                  { key: "visual", icon: <Eye size={20} />, label: "Visual", description: "Diagrams, charts, color-coding", selected: true },
+                  { key: "auditory", icon: <Headphones size={20} />, label: "Auditory", description: "Audio recordings, narration", selected: false },
                   { key: "reading", icon: <BookOpen size={20} />, label: "Reading/Writing", description: "Text summaries, notes, lists" },
                   { key: "kinesthetic", icon: <Brain size={20} />, label: "Kinesthetic", description: "Interactive exercises, practice problems" },
                 ].map((style) => (
@@ -223,15 +223,15 @@ export default function SettingsPage() {
 
         {activeTab === "subscription" && (
           <div className="space-y-6">
-            <div className="rounded-2xl border border-terracotta/20 bg-gradient-to-br from-terracotta/5 to-gold/5 p-6">
+            <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-gold/5 p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-charcoal/50">Current plan</p>
-                  <p className="mt-1 font-heading text-2xl font-bold text-primary">Pro</p>
-                  <p className="mt-1 text-sm text-charcoal/50">$15/month &middot; Renews Mar 10, 2026</p>
+                  <p className="mt-1 font-heading text-2xl font-bold text-primary">Free</p>
+                  <p className="mt-1 text-sm text-charcoal/50">Free forever</p>
                 </div>
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-terracotta/15">
-                  <CreditCard size={28} className="text-terracotta" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15">
+                  <CreditCard size={28} className="text-primary" />
                 </div>
               </div>
             </div>
@@ -240,13 +240,11 @@ export default function SettingsPage() {
               <h2 className="font-heading text-lg font-semibold text-primary">Plan Features</h2>
               <ul className="mt-4 space-y-2">
                 {[
-                  "Unlimited content uploads",
-                  "All output formats (summary, flashcards, quiz, podcast)",
-                  "Visual/manga generation",
-                  "Exam simulation (BAC/GCE)",
-                  "Skill transformation module",
-                  "Priority support",
-                  "Advanced analytics",
+                  "5 content uploads/month",
+                  "Text summaries",
+                  "3 flashcards per material",
+                  "Basic quiz questions",
+                  "Community support",
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-sm text-charcoal/70">
                     <Check size={14} className="text-terracotta" />

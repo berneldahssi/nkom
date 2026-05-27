@@ -1,0 +1,195 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                    🧠 NKOM — OWN WHAT YOU KNOW 🧠                        ║
+║                                                                            ║
+║                     AI-Powered Personalized Learning                       ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  THE PROBLEM: Traditional Learning is Broken                               │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   😵 Chaotic notes scattered everywhere                                     │
+│   ⏱️  5+ hours spent creating study materials                             │
+│   😴 Passive learning (read → memorize → forget)                           │
+│   📉 70% of info forgotten within 24 hours                                 │
+│   😤 One-size-fits-all education doesn't work                             │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  THE SOLUTION: NKOM's 4-Step Magic                                         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Step 1: 📥 UPLOAD              Step 2: 🤖 AI ANALYZES                   │
+│   ─────────────────────          ──────────────────────                   │
+│   • Notes                         • Extracts concepts                       │
+│   • Photos                        • Structures ideas                        │
+│   • Voice recordings              • Finds key definitions                   │
+│   • PDFs                          • Understands relationships                │
+│                                                                             │
+│   Step 3: ✨ GENERATE             Step 4: 📚 LEARN                         │
+│   ────────────────────            ──────────────────                       │
+│   • Flashcards (30 sec)           • Spaced repetition                      │
+│   • Quizzes (30 sec)              • Adaptive difficulty                    │
+│   • Summaries (30 sec)            • Personalized tracking                  │
+│   • Podcasts (30 sec)             • Progress analytics                     │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────┬──────────────────────────────────────────┐
+│   ❌ TRADITIONAL WAY              │    ✅ WITH NKOM                          │
+├──────────────────────────────────┼──────────────────────────────────────────┤
+│                                  │                                          │
+│  📖 Organize notes                │  📥 Upload notes: 1 minute               │
+│     ⏱️  2+ hours                   │                                          │
+│                                  │  🤖 AI generates everything: 3 minutes   │
+│  🃏 Create flashcards             │    • Flashcards ✓                        │
+│     ⏱️  1+ hour                    │    • Quizzes ✓                          │
+│                                  │    • Summaries ✓                        │
+│  📝 Write summaries               │    • Podcasts ✓                         │
+│     ⏱️  1+ hour                    │                                          │
+│                                  │  📚 Start studying: Immediately          │
+│  ❓ Make quiz questions            │                                          │
+│     ⏱️  30+ minutes                │                                          │
+│                                  │                                          │
+│  ─────────────────────           │  ─────────────────────────────          │
+│  TOTAL: 5+ HOURS                 │  TOTAL: 3-5 MINUTES                     │
+│                                  │                                          │
+│  😫 Exhausted                     │  💪 Ready to learn                       │
+│                                  │                                          │
+└──────────────────────────────────┴──────────────────────────────────────────┘
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  WHAT NKOM GENERATES (In Seconds!)                                         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  🃏 FLASHCARDS                    🎙️  PODCASTS                              │
+│  ├─ Question (front)              ├─ Host dialogue                         │
+│  ├─ Answer (back)                 ├─ Expert explanations                   │
+│  └─ Memory hint                   └─ Engaging, conversational              │
+│                                                                             │
+│  📝 QUIZZES                        📖 SUMMARIES                              │
+│  ├─ Multiple choice               ├─ Structured outline                    │
+│  ├─ Instant feedback              ├─ Key terms highlighted                 │
+│  └─ Smart explanations            └─ Organized by topic                    │
+│                                                                             │
+│  🧬 CONCEPT MAPS                  📊 ANALYTICS                              │
+│  ├─ Visual relationships          ├─ What you've mastered                  │
+│  ├─ Knowledge graph               ├─ Weak areas identified                 │
+│  └─ Deeper understanding          └─ Personalized recommendations          │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  THE IMPACT: Real Numbers                                                  │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ⏱️  10+ HOURS SAVED PER WEEK                                            │
+│       Less time studying, more time living                                 │
+│                                                                             │
+│   🧠 3X BETTER RETENTION                                                    │
+│       Spaced repetition scientifically proven                              │
+│                                                                             │
+│   📈 15-20% GRADE IMPROVEMENT                                              │
+│       Actually understanding vs. just memorizing                           │
+│                                                                             │
+│   😌 100% LESS STRESS                                                       │
+│       No more cramming, no more all-nighters                               │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  HOW IT WORKS: The Technology Behind NKOM                                  │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  🤖 Claude AI                    Understands complex concepts               │
+│                                  Generates study materials                 │
+│                                                                             │
+│  🎙️  Whisper API                  Converts voice → text                     │
+│                                  Transcribes lectures instantly            │
+│                                                                             │
+│  📸 Tesseract OCR                 Extracts text from images                 │
+│                                  Reads whiteboards & textbooks             │
+│                                                                             │
+│  ⚡ Next.js + React               Fast, beautiful interface                 │
+│                                  Works on all devices                      │
+│                                                                             │
+│  🛄 FastAPI                        Powerful backend                          │
+│                                  Handles processing instantly              │
+│                                                                             │
+│  ☁️  AWS Cloud                     Scales to millions                        │
+│                                  Always available, always fast             │
+│                                                                             │
+│  🧬 Neuroscience                  Spaced repetition algorithm              │
+│                                  Optimizes memory retention                │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  WHO CAN USE NKOM?                                                         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ✅ High School Students      → Ace exams with less studying               │
+│  ✅ University Students       → Handle multiple courses                    │
+│  ✅ Test Prep                 → SAT, GRE, MCAT, IELTS, etc.               │
+│  ✅ Language Learners         → Learn faster & remember longer             │
+│  ✅ Professionals             → Certifications & skill training             │
+│  ✅ Lifelong Learners         → Any subject, any time                      │
+│  ✅ Teachers                  → Create materials for students              │
+│  ✅ Researchers               → Organize research papers                   │
+│                                                                             │
+│              ➜ BASICALLY: ANYONE WHO WANTS TO LEARN BETTER                 │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  THE BIG PICTURE: Why NKOM Matters                                         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  📊 THE PROBLEM                                                             │
+│  ───────────────────────────────────────────────────────────────            │
+│  Knowledge is abundant. BUT                                                │
+│  Time is scarce. AND                                                       │
+│  Traditional studying is inefficient.                                      │
+│                                                                             │
+│  💡 THE SOLUTION                                                            │
+│  ───────────────────────────────────────────────────────────────            │
+│  NKOM makes learning:                                                      │
+│  • PERSONAL — Adapts to how YOU learn                                      │
+│  • EFFICIENT — Saves 10+ hours per week                                   │
+│  • EFFECTIVE — 3x better retention                                        │
+│  • ENJOYABLE — Less stress, more success                                   │
+│  • ACCESSIBLE — For anyone, anywhere                                       │
+│                                                                             │
+│  🚀 THE FUTURE                                                              │
+│  ───────────────────────────────────────────────────────────────            │
+│  Education that evolves with YOU instead of forcing YOU to fit             │
+│  the system. Learning becomes a joy, not a burden.                         │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+                     ✨ OWN WHAT YOU KNOW ✨
+                   Let NKOM handle the busywork.
+                  You focus on understanding & growth.
+                       → Start learning better today ←
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║  Ready to transform how you learn?                                         ║
+║  🧠 Visit: nkom.app                                                        ║
+║  📧 Questions? hello@nkom.app                                              ║
+║  💜 Made with love by the NKOM team                                        ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝

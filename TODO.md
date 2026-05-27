@@ -1,6 +1,6 @@
 # NKOM — Business & Development TODO
 
-> **"Wisdom that sticks."** — AI-Powered Personalized Learning Platform
+> **"Own What You Know."** — AI-Powered Personalized Learning Platform
 >
 > This is the living roadmap for NKOM. Phases are sequential — each builds
 > on the previous one. Check items off as you go.

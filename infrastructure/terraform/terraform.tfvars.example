@@ -1,0 +1,28 @@
+# NKOM Production Infrastructure Configuration
+# Copy this file to terraform.tfvars and fill in your values
+
+project_name   = "nkom"
+environment    = "production"  # development, staging, or production
+aws_region     = "us-east-1"
+
+# Database Configuration
+db_instance_class = "db.t3.micro"  # Use db.t3.small or higher for production
+
+# Security: Generate these with strong random values
+# db_username should be 8+ chars, alphanumeric + underscore
+# db_password should be 16+ chars with uppercase, lowercase, numbers, special chars
+# redis_auth_token should be 16+ chars
+
+# Example (DO NOT USE THESE IN PRODUCTION):
+# db_username = "nkom_admin"
+# db_password = "SecureP@ssw0rd!2024"
+# redis_auth_token = "RedisAuth!Token@2024"
+
+# Backup Configuration
+backup_retention_days = 7  # 1-35 days
+
+# To use these values:
+# 1. Copy to terraform.tfvars (git-ignored)
+# 2. Replace example values with strong credentials
+# 3. Run: terraform plan -var-file="terraform.tfvars"
+# 4. Run: terraform apply -var-file="terraform.tfvars"

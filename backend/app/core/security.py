@@ -58,3 +58,49 @@ def decode_token(token: str) -> dict:
         return jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
         raise
+
+
+# ── Password security ─────────────────────────────────────────────
+
+def validate_password_strength(password: str) -> tuple[bool, str | None]:
+    """
+    Validate password meets security requirements:
+    - At least 12 characters
+    - At least one uppercase letter
+    - At least one lowercase letter
+    - At least one digit
+    - At least one special character
+    """
+    if len(password) < 12:
+        return False, "Password must be at least 12 characters long"
+
+    if not any(c.isupper() for c in password):
+        return False, "Password must contain at least one uppercase letter"
+
+    if not any(c.islower() for c in password):
+        return False, "Password must contain at least one lowercase letter"
+
+    if not any(c.isdigit() for c in password):
+        return False, "Password must contain at least one digit"
+
+    special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
+    if not any(c in special_chars for c in password):
+        return False, "Password must contain at least one special character"
+
+    return True, None
+
+
+# ── Input sanitization ────────────────────────────────────────────
+
+def sanitize_input(input_str: str, max_length: int = 255) -> str:
+    """Sanitize user input to prevent injection attacks"""
+    if not isinstance(input_str, str):
+        raise ValueError("Input must be a string")
+
+    # Limit length
+    input_str = input_str[:max_length]
+
+    # Remove null bytes (can bypass filters)
+    input_str = input_str.replace("\x00", "")
+
+    return input_str.strip()

@@ -1,6 +1,6 @@
 # NKOM — AI-Powered Personalized Learning Platform
 
-> **Wisdom that sticks.** Upload your notes, photos, or audio — NKOM transforms them into personalized learning experiences powered by AI and neuroscience.
+> **Own What You Know.** Upload your notes, photos, or audio — NKOM transforms them into personalized learning experiences powered by AI and neuroscience.
 
 ## Tech Stack
 

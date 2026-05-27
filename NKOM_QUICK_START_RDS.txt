@@ -1,0 +1,267 @@
+================================================================================
+               NKOM POSTGRESQL DATABASE SETUP - QUICK START
+================================================================================
+
+OPTION 1: AWS RDS POSTGRESQL (RECOMMENDED FOR MVP)
+================================================================================
+
+1. GO TO AWS CONSOLE
+   https://console.aws.amazon.com/rds/
+
+2. CREATE DATABASE
+   - Click "Create database"
+   - Engine: PostgreSQL 15
+   - Template: Free tier
+   - Instance: nkom-postgres-dev
+   - Username: nkom_admin
+   - Password: [Save this!]
+   - Public accessibility: YES
+   - Port: 5432
+   - Initial database: nkom
+   - Create!
+
+3. WAIT FOR "AVAILABLE" STATUS (~5 minutes)
+   - Go to Databases → nkom-postgres-dev
+   - Copy the Endpoint (looks like: nkom-postgres-dev.xxxxx.us-east-1.rds.amazonaws.com)
+
+4. CONFIGURE SECURITY GROUP
+   - Click the security group link
+   - Add inbound rule: PostgreSQL (5432), Source 0.0.0.0/0
+
+5. UPDATE YOUR .env FILE
+   cd /home/user/nkom/backend
+   nano .env
+
+   Change these lines:
+   POSTGRES_USER=nkom_admin
+   POSTGRES_PASSWORD=YourPasswordFromStep2
+   POSTGRES_HOST=nkom-postgres-dev.xxxxx.us-east-1.rds.amazonaws.com
+   POSTGRES_PORT=5432
+   POSTGRES_DB=nkom
+
+6. TEST CONNECTION
+   psql -h nkom-postgres-dev.xxxxx.us-east-1.rds.amazonaws.com \
+        -U nkom_admin \
+        -d nkom \
+        -c "SELECT version();"
+
+7. CREATE TABLES (RUN MIGRATIONS)
+   cd /home/user/nkom/backend
+   pip install -e .
+   alembic upgrade head
+
+8. VERIFY TABLES
+   psql -h nkom-postgres-dev.xxxxx.us-east-1.rds.amazonaws.com \
+        -U nkom_admin \
+        -d nkom \
+        -c "\dt"
+
+   You should see 6 tables:
+   - users
+   - content_uploads
+   - study_materials
+   - flashcards
+   - quiz_questions
+   - study_sessions
+
+9. START YOUR BACKEND
+   cd /home/user/nkom/backend
+   export ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE
+   uvicorn app.main:app --reload --port 8000
+
+10. TEST API
+    curl -X POST http://localhost:8000/api/v1/auth/register \
+      -H "Content-Type: application/json" \
+      -d '{
+        "email": "test@nkom.com",
+        "password": "testpass123",
+        "first_name": "Test",
+        "last_name": "User",
+        "country": "Cameroon"
+      }'
+
+    Should see: access_token + refresh_token
+
+================================================================================
+OPTION 2: LOCAL POSTGRESQL (FOR OFFLINE DEVELOPMENT)
+================================================================================
+
+If you prefer NOT to use AWS RDS:
+
+1. INSTALL POSTGRESQL LOCALLY
+   macOS:     brew install postgresql@15
+   Ubuntu:    sudo apt-get install postgresql postgresql-contrib
+   Windows:   Download from https://www.postgresql.org/download/windows/
+
+2. START POSTGRESQL SERVICE
+   macOS:     brew services start postgresql@15
+   Ubuntu:    sudo systemctl start postgresql
+   Windows:   PostgreSQL runs automatically
+
+3. CREATE USER & DATABASE
+   sudo -u postgres psql
+
+   CREATE USER nkom_admin WITH PASSWORD 'nkom_dev_password';
+   CREATE DATABASE nkom OWNER nkom_admin;
+   GRANT ALL PRIVILEGES ON DATABASE nkom TO nkom_admin;
+   \q
+
+4. UPDATE .env FILE
+   cd /home/user/nkom/backend
+   nano .env
+
+   Change these lines:
+   POSTGRES_USER=nkom_admin
+   POSTGRES_PASSWORD=nkom_dev_password
+   POSTGRES_HOST=localhost
+   POSTGRES_PORT=5432
+   POSTGRES_DB=nkom
+
+5. RUN MIGRATIONS
+   cd /home/user/nkom/backend
+   pip install -e .
+   alembic upgrade head
+
+6. START BACKEND
+   cd /home/user/nkom/backend
+   export ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE
+   uvicorn app.main:app --reload --port 8000
+
+================================================================================
+OPTION 3: DOCKER COMPOSE (MOST ISOLATED)
+================================================================================
+
+If Docker daemon is running:
+
+1. START CONTAINERS
+   cd /home/user/nkom
+   docker compose up -d
+
+2. RUN MIGRATIONS
+   cd backend
+   pip install -e .
+   alembic upgrade head
+
+3. VIEW DATABASE
+   docker exec -it nkom_postgres psql -U nkom -d nkom -c "\dt"
+
+4. START BACKEND
+   cd backend
+   export ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE
+   uvicorn app.main:app --reload --port 8000
+
+================================================================================
+DATABASE SCHEMA (ALREADY CREATED BY MIGRATIONS)
+================================================================================
+
+users
+├── id (UUID)
+├── email (unique)
+├── password_hash
+├── first_name, last_name
+├── country, timezone
+├── subscription_tier, is_premium
+└── created_at, updated_at
+
+content_uploads
+├── id (UUID)
+├── user_id (foreign key → users)
+├── file_type (text, pdf, image, audio)
+├── extracted_text
+├── processing_status
+└── created_at
+
+study_materials
+├── id (UUID)
+├── user_id (foreign key → users)
+├── content_id (foreign key → content_uploads)
+├── title, subject, source_type
+├── summary
+├── difficulty_level
+└── created_at, updated_at
+
+flashcards
+├── id (UUID)
+├── material_id (foreign key → study_materials)
+├── user_id (foreign key → users)
+├── front_text, back_text
+├── ease_factor (spaced repetition)
+├── interval, repetitions, next_review
+└── created_at, last_reviewed
+
+quiz_questions
+├── id (UUID)
+├── material_id (foreign key → study_materials)
+├── question_text
+├── question_type (multiple_choice, short_answer)
+├── options (JSONB)
+├── correct_answer
+├── difficulty
+└── created_at
+
+study_sessions
+├── id (UUID)
+├── user_id (foreign key → users)
+├── material_id (foreign key → study_materials)
+├── session_type (flashcard, quiz)
+├── started_at, ended_at
+├── duration_minutes
+├── cards_reviewed, correct_answers, score
+└── timestamps
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+❌ "Cannot connect to database"
+   → Check .env has correct POSTGRES_HOST, POSTGRES_PORT
+   → Check RDS security group allows inbound on port 5432
+   → Verify RDS status is "Available"
+
+❌ "Alembic upgrade fails"
+   → Make sure database exists and is empty
+   → Check user has CREATE TABLE permissions
+   → Run: alembic current (to check migration status)
+
+❌ "API returns database error"
+   → Check backend .env ANTHROPIC_API_KEY is set
+   → Verify tables exist: psql ... -c "\dt"
+   → Check backend logs for connection errors
+
+================================================================================
+HELPFUL COMMANDS
+================================================================================
+
+# Connect to database
+psql -h POSTGRES_HOST -U POSTGRES_USER -d POSTGRES_DB
+
+# View all tables
+\dt
+
+# View table structure
+\d tablename
+
+# Run query
+SELECT * FROM users;
+
+# Exit psql
+\q
+
+# Check Alembic migration status
+alembic current
+
+# Show all migrations
+alembic history
+
+# Downgrade to previous migration
+alembic downgrade -1
+
+# View backend API docs (after starting)
+http://localhost:8000/docs
+
+================================================================================
+✅ DONE! YOUR NKOM DATABASE IS READY
+================================================================================
+
+For full details, see: AWS_RDS_SETUP.md
+For questions, check: https://docs.aws.amazon.com/rds/

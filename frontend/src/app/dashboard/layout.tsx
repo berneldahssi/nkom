@@ -89,7 +89,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="flex-1 min-w-0">
               <p className="truncate text-sm font-medium text-charcoal">Bernel Dahssi</p>
-              <p className="truncate text-xs text-charcoal/40">Pro plan</p>
+              <p className="truncate text-xs text-charcoal/40">Free plan</p>
             </div>
           </div>
           <button className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-charcoal/40 transition hover:bg-neutral hover:text-charcoal/60">

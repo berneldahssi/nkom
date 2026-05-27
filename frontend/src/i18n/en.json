@@ -1,0 +1,129 @@
+{
+  "common": {
+    "appName": "NKOM",
+    "tagline": "From Scientia to Sapientia. Wisdom meets science.",
+    "signIn": "Sign in",
+    "signUp": "Get started free",
+    "logout": "Sign out",
+    "back": "Back",
+    "home": "Home",
+    "about": "About",
+    "pricing": "Pricing",
+    "features": "Features",
+    "howItWorks": "How it works"
+  },
+  "landing": {
+    "hero": {
+      "title": "Own What You Know",
+      "subtitle": "Record your class. Upload your notes. Get personalized study materials instantly. Retain 90% of what you study — not 10%.",
+      "cta": "Start learning smarter",
+      "secondary": "See how it works",
+      "freeNote": "Free forever plan. No credit card required."
+    },
+    "features": {
+      "title": "Your knowledge, your way",
+      "subtitle": "Upload ANY material and get personalized study tools instantly.",
+      "instantRecording": {
+        "title": "Instant Recording",
+        "desc": "One-tap recording with automatic transcription. Capture every lecture instantly."
+      },
+      "uploadAnything": {
+        "title": "Upload Anything",
+        "desc": "Photos, audio, PDFs, text — upload what works for you."
+      },
+      "aiPowered": {
+        "title": "AI-Powered Materials",
+        "desc": "Summaries, flashcards, quizzes — all generated instantly from your content."
+      },
+      "learnYourWay": {
+        "title": "Learn Your Way",
+        "desc": "Personalized formats for how YOUR brain learns best."
+      },
+      "smartRepetition": {
+        "title": "Smart Repetition",
+        "desc": "Remember more with scientifically-timed review schedules."
+      },
+      "trackProgress": {
+        "title": "Track Progress",
+        "desc": "See what you're mastering. Celebrate wins. Improve continuously."
+      }
+    },
+    "howItWorks": {
+      "title": "From class to mastery in 3 steps",
+      "step1": "Record or Upload",
+      "step1Desc": "Tap to record. Or upload photos, audio, PDFs, text.",
+      "step2": "AI Transforms",
+      "step2Desc": "Our AI extracts concepts and generates study materials you need.",
+      "step3": "Learn & Master",
+      "step3Desc": "Review smarter with spaced repetition. Watch your retention soar."
+    },
+    "formats": {
+      "title": "Learn in the format that works for you",
+      "subtitle": "From a single upload, get everything you need.",
+      "summaries": "Summaries",
+      "summariesDesc": "Key concepts organized clearly",
+      "flashcards": "Flashcards",
+      "flashcardsDesc": "Active recall cards",
+      "quizzes": "Quizzes",
+      "quizzesDesc": "Test your knowledge"
+    },
+    "science": {
+      "title": "Built on learning science",
+      "desc": "NKOM is grounded in neuroscience research and proven learning principles. Your brain learns best when content is personalized, interactive, and spaced over time. That's exactly how NKOM works."
+    },
+    "pricing": {
+      "title": "Simple, fair pricing",
+      "subtitle": "Start free. Upgrade when you're ready.",
+      "free": "Free",
+      "student": "Student",
+      "pro": "Pro"
+    },
+    "cta": {
+      "title": "Ready to study smarter?",
+      "subtitle": "Join students across Africa who are learning more effectively and retaining more of what they study.",
+      "button": "Start your free trial",
+      "note": "Free forever plan • No credit card required"
+    }
+  },
+  "dashboard": {
+    "upload": {
+      "title": "Add your learning material",
+      "subtitle": "Choose how you want to share your knowledge.",
+      "record": "Record",
+      "recordDesc": "Lecture or voice note",
+      "upload": "Upload",
+      "uploadDesc": "Photo, PDF, or file",
+      "text": "Text",
+      "textDesc": "Paste your notes",
+      "recording": "Recording your material",
+      "recordingDesc": "Record up to 2 hours of audio. We'll transcribe and analyze it.",
+      "startRecording": "Start Recording",
+      "stopRecording": "Stop Recording",
+      "uploadButton": "Upload",
+      "discardButton": "Discard",
+      "uploading": "Uploading your content...",
+      "uploadSuccess": "Material uploaded!",
+      "uploadSuccessDesc": "Your content has been uploaded and is being processed.",
+      "viewMaterials": "View materials",
+      "uploadAnother": "Upload another"
+    },
+    "materials": {
+      "title": "Study Materials",
+      "subtitle": "materials in your library",
+      "addMaterial": "Add material",
+      "search": "Search materials..."
+    }
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "country": "Country",
+    "createAccount": "Create Account",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don't have an account?"
+  }
+}
