@@ -52,6 +52,15 @@ const config: Config = {
         charcoal: {
           DEFAULT: "rgb(var(--color-charcoal) / <alpha-value>)",
         },
+        success: { DEFAULT: "#22c55e", light: "#f0fdf4", dark: "#166534" },
+        warning: { DEFAULT: "#f59e0b", light: "#fffbeb", dark: "#92400e" },
+        error: { DEFAULT: "#ef4444", light: "#fef2f2", dark: "#991b1b" },
+        info: { DEFAULT: "#3b82f6", light: "#eff6ff", dark: "#1e3a8a" },
+      },
+      boxShadow: {
+        card: "0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.07)",
+        modal: "0 20px 60px -10px rgb(0 0 0 / 0.3), 0 8px 20px -8px rgb(0 0 0 / 0.2)",
+        dropdown: "0 4px 16px -2px rgb(0 0 0 / 0.12), 0 2px 4px -2px rgb(0 0 0 / 0.08)",
       },
       fontFamily: {
         heading: ["Montserrat", "sans-serif"],
