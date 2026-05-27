@@ -12,69 +12,126 @@ import {
   RotateCcw,
   Trophy,
   Brain,
+  Plane,
 } from "lucide-react";
+import { PSTAR_SECTIONS, getRandomQuestions, PSTARQuestion } from "@/lib/pstar-data";
+
+const FULL_EXAM_ID = "all";
+const FULL_EXAM_COUNT = 50;
 
 const quizSets = [
-  { id: "1", title: "Cell Biology", questions: 10, bestScore: 80, difficulty: "Medium", subject: "Biology" },
-  { id: "2", title: "French Revolution", questions: 8, bestScore: null, difficulty: "Easy", subject: "History" },
-  { id: "3", title: "Linear Algebra", questions: 12, bestScore: 65, difficulty: "Hard", subject: "Mathematics" },
-  { id: "4", title: "Organic Chemistry", questions: 10, bestScore: 90, difficulty: "Hard", subject: "Chemistry" },
-];
-
-const sampleQuestions = [
-  { question: "Which organelle is responsible for ATP production?", options: ["Nucleus", "Mitochondria", "Golgi Apparatus", "Ribosome"], correct: 1 },
-  { question: "The cell membrane is described by which model?", options: ["Lock and Key", "Fluid Mosaic", "Double Helix", "Central Dogma"], correct: 1 },
-  { question: "During which phase does DNA replication occur?", options: ["G1 Phase", "S Phase", "G2 Phase", "M Phase"], correct: 1 },
-  { question: "Prokaryotic cells lack which structure?", options: ["Cell membrane", "Ribosomes", "Nucleus", "DNA"], correct: 2 },
-  { question: "What is the function of the rough ER?", options: ["Lipid synthesis", "Protein synthesis", "ATP production", "Cell division"], correct: 1 },
+  {
+    id: FULL_EXAM_ID,
+    title: "Full PSTAR Exam",
+    questions: FULL_EXAM_COUNT,
+    difficulty: "Mixed" as const,
+    subject: "All 14 Sections",
+    featured: true,
+  },
+  ...PSTAR_SECTIONS.map((s) => ({
+    id: String(s.number),
+    title: s.title,
+    questions: s.questions.length,
+    difficulty: (s.difficulty.charAt(0).toUpperCase() + s.difficulty.slice(1)) as "Easy" | "Medium" | "Hard",
+    subject: `Section ${s.number}`,
+    featured: false,
+  })),
 ];
 
 export default function QuizPage() {
-  const [selectedQuiz, setSelectedQuiz] = useState<string | null>(null);
+  const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
+  const [activeQuestions, setActiveQuestions] = useState<PSTARQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  const [startTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(Date.now());
 
-  if (!selectedQuiz) {
+  const handleSelectQuiz = (id: string) => {
+    const sectionNum = id === FULL_EXAM_ID ? undefined : parseInt(id);
+    const count = id === FULL_EXAM_ID ? FULL_EXAM_COUNT : 9999;
+    const questions = getRandomQuestions(count, sectionNum);
+    setActiveQuestions(questions);
+    setSelectedQuizId(id);
+    setCurrent(0);
+    setSelected(null);
+    setAnswered(false);
+    setScore(0);
+    setDone(false);
+    setStartTime(Date.now());
+  };
+
+  const handleRetry = () => {
+    const sectionNum = selectedQuizId === FULL_EXAM_ID ? undefined : parseInt(selectedQuizId!);
+    const count = selectedQuizId === FULL_EXAM_ID ? FULL_EXAM_COUNT : 9999;
+    setActiveQuestions(getRandomQuestions(count, sectionNum));
+    setCurrent(0);
+    setSelected(null);
+    setAnswered(false);
+    setScore(0);
+    setDone(false);
+    setStartTime(Date.now());
+  };
+
+  const selectedSet = quizSets.find((q) => q.id === selectedQuizId);
+
+  if (!selectedQuizId) {
     return (
       <div className="mx-auto max-w-4xl px-6 py-8">
-        <h1 className="font-heading text-2xl font-bold text-primary">Practice Quizzes</h1>
-        <p className="mt-1 text-sm text-charcoal/50">
-          Test your knowledge with AI-generated quizzes based on your study materials.
-        </p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta/10">
+            <Plane size={20} className="text-terracotta" />
+          </div>
+          <div>
+            <h1 className="font-heading text-2xl font-bold text-primary">PSTAR Practice Quizzes</h1>
+            <p className="text-sm text-charcoal/50">Transport Canada TP 11919E — 192 official questions</p>
+          </div>
+        </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {quizSets.map((quiz) => (
+        {/* Full exam featured card */}
+        <button
+          onClick={() => handleSelectQuiz(FULL_EXAM_ID)}
+          className="mt-8 w-full rounded-2xl border-2 border-terracotta/30 bg-gradient-to-r from-terracotta/5 to-gold/5 p-6 text-left transition hover:border-terracotta/50 hover:shadow-md"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-terracotta/15">
+                <Trophy size={24} className="text-terracotta" />
+              </div>
+              <div>
+                <h3 className="font-heading text-lg font-bold text-primary">Full PSTAR Exam Simulation</h3>
+                <p className="text-sm text-charcoal/50">50 random questions from all 14 sections · Shuffled each attempt</p>
+              </div>
+            </div>
+            <span className="rounded-full bg-terracotta/15 px-3 py-1 text-sm font-semibold text-terracotta">
+              95% target
+            </span>
+          </div>
+        </button>
+
+        <p className="mt-6 text-xs font-medium uppercase tracking-wider text-charcoal/30">Practice by section</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          {quizSets.filter((q) => !q.featured).map((quiz) => (
             <button
               key={quiz.id}
-              onClick={() => setSelectedQuiz(quiz.id)}
-              className="flex flex-col rounded-2xl border border-primary/10 bg-white p-6 text-left transition hover:border-primary/20 hover:shadow-md"
+              onClick={() => handleSelectQuiz(quiz.id)}
+              className="flex items-center gap-4 rounded-2xl border border-primary/10 bg-white p-5 text-left transition hover:border-primary/20 hover:shadow-sm"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                  <GraduationCap size={24} className="text-primary" />
-                </div>
-                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                  quiz.difficulty === "Easy" ? "bg-green-50 text-green-600" :
-                  quiz.difficulty === "Medium" ? "bg-gold/10 text-gold-700" :
-                  "bg-red-50 text-red-500"
-                }`}>
-                  {quiz.difficulty}
-                </span>
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                <GraduationCap size={20} className="text-primary" />
               </div>
-              <h3 className="mt-4 font-heading text-lg font-semibold text-primary">{quiz.title}</h3>
-              <p className="mt-1 text-xs text-charcoal/40">{quiz.subject} &middot; {quiz.questions} questions</p>
-              {quiz.bestScore !== null ? (
-                <div className="mt-4 flex items-center gap-2">
-                  <Trophy size={14} className="text-gold" />
-                  <span className="text-sm font-medium text-charcoal/60">Best: {quiz.bestScore}%</span>
-                </div>
-              ) : (
-                <p className="mt-4 text-sm text-terracotta font-medium">Not attempted yet</p>
-              )}
+              <div className="min-w-0 flex-1">
+                <h3 className="truncate font-medium text-charcoal">{quiz.title}</h3>
+                <p className="text-xs text-charcoal/40">{quiz.subject} &middot; {quiz.questions} questions</p>
+              </div>
+              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
+                quiz.difficulty === "Easy" ? "bg-green-50 text-green-600" :
+                quiz.difficulty === "Hard" ? "bg-red-50 text-red-500" :
+                "bg-gold/10 text-amber-700"
+              }`}>
+                {quiz.difficulty}
+              </span>
             </button>
           ))}
         </div>
@@ -83,41 +140,52 @@ export default function QuizPage() {
   }
 
   if (done) {
-    const percentage = Math.round((score / sampleQuestions.length) * 100);
+    const percentage = Math.round((score / activeQuestions.length) * 100);
     const elapsed = Math.round((Date.now() - startTime) / 1000);
     const minutes = Math.floor(elapsed / 60);
     const seconds = elapsed % 60;
+    const passed = percentage >= 90;
+    const targetMet = percentage >= 95;
 
     return (
       <div className="mx-auto max-w-lg px-6 py-16 text-center">
         <div className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full ${
-          percentage >= 80 ? "bg-green-50" : percentage >= 50 ? "bg-gold/10" : "bg-red-50"
+          targetMet ? "bg-green-50" : passed ? "bg-gold/10" : "bg-red-50"
         }`}>
-          {percentage >= 80 ? (
+          {targetMet ? (
             <Trophy size={44} className="text-green-500" />
           ) : (
-            <GraduationCap size={44} className={percentage >= 50 ? "text-gold" : "text-red-400"} />
+            <GraduationCap size={44} className={passed ? "text-amber-500" : "text-red-400"} />
           )}
         </div>
         <h1 className="mt-6 font-heading text-2xl font-bold text-primary">Quiz Complete!</h1>
         <p className="mt-4 font-heading text-5xl font-bold text-terracotta">{percentage}%</p>
         <p className="mt-1 text-charcoal/50">
-          {score} out of {sampleQuestions.length} correct
+          {score} out of {activeQuestions.length} correct
         </p>
+        {targetMet && (
+          <p className="mt-2 text-sm font-medium text-green-600">Target met — above 95%!</p>
+        )}
+        {passed && !targetMet && (
+          <p className="mt-2 text-sm font-medium text-amber-600">Passing mark reached — keep pushing toward 95%</p>
+        )}
+        {!passed && (
+          <p className="mt-2 text-sm font-medium text-red-500">Below passing mark (90%) — review and retry</p>
+        )}
         <div className="mt-4 flex items-center justify-center gap-4 text-sm text-charcoal/40">
           <span className="flex items-center gap-1"><Clock size={14} /> {minutes}m {seconds}s</span>
-          <span className="flex items-center gap-1"><Brain size={14} /> {sampleQuestions.length} questions</span>
+          <span className="flex items-center gap-1"><Brain size={14} /> {activeQuestions.length} questions</span>
         </div>
 
         <div className="mt-8 flex items-center justify-center gap-3">
           <button
-            onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setDone(false); }}
+            onClick={handleRetry}
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary-600"
           >
             <RotateCcw size={16} /> Retry
           </button>
           <button
-            onClick={() => { setSelectedQuiz(null); setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setDone(false); }}
+            onClick={() => setSelectedQuizId(null)}
             className="rounded-xl border border-primary/20 px-6 py-3 font-medium text-primary hover:bg-primary-50"
           >
             All quizzes
@@ -127,7 +195,7 @@ export default function QuizPage() {
     );
   }
 
-  const q = sampleQuestions[current];
+  const q = activeQuestions[current];
 
   const handleSelect = (idx: number) => {
     if (answered) return;
@@ -137,7 +205,7 @@ export default function QuizPage() {
   };
 
   const handleNext = () => {
-    if (current + 1 >= sampleQuestions.length) {
+    if (current + 1 >= activeQuestions.length) {
       setDone(true);
     } else {
       setCurrent((c) => c + 1);
@@ -149,24 +217,31 @@ export default function QuizPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
       <button
-        onClick={() => { setSelectedQuiz(null); setCurrent(0); setSelected(null); setAnswered(false); setScore(0); }}
+        onClick={() => setSelectedQuizId(null)}
         className="inline-flex items-center gap-2 text-sm text-charcoal/50 hover:text-primary"
       >
         <ArrowLeft size={16} /> Back to quizzes
       </button>
 
       <div className="mt-6 flex items-center justify-between">
-        <h1 className="font-heading text-xl font-bold text-primary">Cell Biology Quiz</h1>
+        <div>
+          <h1 className="font-heading text-xl font-bold text-primary">{selectedSet?.title}</h1>
+          <p className="text-xs text-charcoal/40">{selectedSet?.subject}</p>
+        </div>
         <span className="text-sm text-charcoal/40">{score}/{current + (answered ? 1 : 0)} correct</span>
       </div>
 
       <div className="mt-4 h-2 rounded-full bg-primary/10">
-        <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${((current + 1) / sampleQuestions.length) * 100}%` }} />
+        <div
+          className="h-full rounded-full bg-terracotta transition-all"
+          style={{ width: `${((current + 1) / activeQuestions.length) * 100}%` }}
+        />
       </div>
-      <p className="mt-2 text-xs text-charcoal/30">Question {current + 1} of {sampleQuestions.length}</p>
+      <p className="mt-2 text-xs text-charcoal/30">Question {current + 1} of {activeQuestions.length}</p>
 
       <div className="mt-8 rounded-2xl border border-primary/10 bg-white p-8">
-        <h2 className="font-heading text-xl font-semibold text-primary">{q.question}</h2>
+        <p className="text-xs font-medium uppercase tracking-wider text-charcoal/30">Q {q.id}</p>
+        <h2 className="mt-2 font-heading text-xl font-semibold text-primary">{q.question}</h2>
         <div className="mt-6 space-y-3">
           {q.options.map((opt, idx) => {
             let style = "border-primary/10 hover:border-primary/20 hover:bg-neutral/50";
@@ -194,12 +269,20 @@ export default function QuizPage() {
           })}
         </div>
 
+        {answered && q.hint && (
+          <div className="mt-4 rounded-xl bg-gold/10 p-4">
+            <p className="text-sm font-medium text-amber-800">
+              <span className="font-semibold">Tip: </span>{q.hint}
+            </p>
+          </div>
+        )}
+
         {answered && (
           <button
             onClick={handleNext}
-            className="mt-6 flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary-600"
+            className="mt-4 flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary-600"
           >
-            {current + 1 >= sampleQuestions.length ? "See Results" : "Next Question"}
+            {current + 1 >= activeQuestions.length ? "See Results" : "Next Question"}
             <ChevronRight size={16} />
           </button>
         )}
