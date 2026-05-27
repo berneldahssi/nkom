@@ -4,6 +4,21 @@ variable "project_name" {
   default     = "nkom"
 }
 
+# ── Cost toggles ─────────────────────────────────────────────────
+# Disable to save money during early development.
+
+variable "enable_redis" {
+  description = "Deploy ElastiCache Redis (~$13/month). Disable to skip."
+  type        = bool
+  default     = false
+}
+
+variable "enable_kms_custom_keys" {
+  description = "Create customer-managed KMS keys ($1/key/month × 3). Disable to use free AWS-managed encryption."
+  type        = bool
+  default     = false
+}
+
 variable "environment" {
   description = "Deployment environment (development, staging, production)"
   type        = string
