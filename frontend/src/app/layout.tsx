@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { ToastProvider } from "@/components/ui/Toast";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -32,9 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={`${montserrat.variable} ${inter.variable}`}>
       <body className="min-h-screen bg-neutral">
         <ThemeProvider>
-          <LanguageProvider>
-            <AuthProvider>{children}</AuthProvider>
-          </LanguageProvider>
+          <ToastProvider>
+            <LanguageProvider>
+              <AuthProvider>{children}</AuthProvider>
+            </LanguageProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
