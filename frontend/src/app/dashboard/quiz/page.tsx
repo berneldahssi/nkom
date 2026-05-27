@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -15,6 +15,7 @@ import {
   Plane,
 } from "lucide-react";
 import { PSTAR_SECTIONS, getRandomQuestions, PSTARQuestion } from "@/lib/pstar-data";
+import { CircularProgress } from "@/components/ui/Progress";
 
 const FULL_EXAM_ID = "all";
 const FULL_EXAM_COUNT = 50;
@@ -38,6 +39,12 @@ const quizSets = [
   })),
 ];
 
+function formatTime(seconds: number) {
+  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
 export default function QuizPage() {
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [activeQuestions, setActiveQuestions] = useState<PSTARQuestion[]>([]);
@@ -46,7 +53,14 @@ export default function QuizPage() {
   const [answered, setAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  const [startTime, setStartTime] = useState(Date.now());
+  const [elapsed, setElapsed] = useState(0);
+  const [finalElapsed, setFinalElapsed] = useState(0);
+
+  useEffect(() => {
+    if (!selectedQuizId || done) return;
+    const id = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => clearInterval(id);
+  }, [selectedQuizId, done]);
 
   const handleSelectQuiz = (id: string) => {
     const sectionNum = id === FULL_EXAM_ID ? undefined : parseInt(id);
@@ -59,7 +73,8 @@ export default function QuizPage() {
     setAnswered(false);
     setScore(0);
     setDone(false);
-    setStartTime(Date.now());
+    setElapsed(0);
+    setFinalElapsed(0);
   };
 
   const handleRetry = () => {
@@ -71,7 +86,8 @@ export default function QuizPage() {
     setAnswered(false);
     setScore(0);
     setDone(false);
-    setStartTime(Date.now());
+    setElapsed(0);
+    setFinalElapsed(0);
   };
 
   const selectedSet = quizSets.find((q) => q.id === selectedQuizId);
@@ -89,7 +105,6 @@ export default function QuizPage() {
           </div>
         </div>
 
-        {/* Full exam featured card */}
         <button
           onClick={() => handleSelectQuiz(FULL_EXAM_ID)}
           className="mt-8 w-full rounded-2xl border-2 border-terracotta/30 bg-gradient-to-r from-terracotta/5 to-gold/5 p-6 text-left transition hover:border-terracotta/50 hover:shadow-md"
@@ -126,8 +141,8 @@ export default function QuizPage() {
                 <p className="text-xs text-charcoal/40">{quiz.subject} &middot; {quiz.questions} questions</p>
               </div>
               <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
-                quiz.difficulty === "Easy" ? "bg-green-50 text-green-600" :
-                quiz.difficulty === "Hard" ? "bg-red-50 text-red-500" :
+                quiz.difficulty === "Easy" ? "bg-success/10 text-success" :
+                quiz.difficulty === "Hard" ? "bg-error/10 text-error" :
                 "bg-gold/10 text-amber-700"
               }`}>
                 {quiz.difficulty}
@@ -141,52 +156,43 @@ export default function QuizPage() {
 
   if (done) {
     const percentage = Math.round((score / activeQuestions.length) * 100);
-    const elapsed = Math.round((Date.now() - startTime) / 1000);
-    const minutes = Math.floor(elapsed / 60);
-    const seconds = elapsed % 60;
     const passed = percentage >= 90;
     const targetMet = percentage >= 95;
+    const scoreColor = targetMet ? "text-success" : passed ? "text-warning" : "text-error";
 
     return (
       <div className="mx-auto max-w-lg px-6 py-16 text-center">
-        <div className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full ${
-          targetMet ? "bg-green-50" : passed ? "bg-gold/10" : "bg-red-50"
-        }`}>
-          {targetMet ? (
-            <Trophy size={44} className="text-green-500" />
-          ) : (
-            <GraduationCap size={44} className={passed ? "text-amber-500" : "text-red-400"} />
-          )}
+        <h1 className="font-heading text-2xl font-bold text-primary">Quiz Complete!</h1>
+
+        {/* Circular SVG score */}
+        <div className="mt-6 flex justify-center">
+          <CircularProgress value={percentage} size={140} strokeWidth={10}>
+            <div className="text-center">
+              <p className={`font-heading text-3xl font-bold ${scoreColor}`}>{percentage}%</p>
+              <p className="text-xs text-charcoal/40">{score}/{activeQuestions.length}</p>
+            </div>
+          </CircularProgress>
         </div>
-        <h1 className="mt-6 font-heading text-2xl font-bold text-primary">Quiz Complete!</h1>
-        <p className="mt-4 font-heading text-5xl font-bold text-terracotta">{percentage}%</p>
-        <p className="mt-1 text-charcoal/50">
-          {score} out of {activeQuestions.length} correct
-        </p>
-        {targetMet && (
-          <p className="mt-2 text-sm font-medium text-green-600">Target met — above 95%!</p>
-        )}
-        {passed && !targetMet && (
-          <p className="mt-2 text-sm font-medium text-amber-600">Passing mark reached — keep pushing toward 95%</p>
-        )}
-        {!passed && (
-          <p className="mt-2 text-sm font-medium text-red-500">Below passing mark (90%) — review and retry</p>
-        )}
+
+        {targetMet && <p className="mt-4 text-sm font-medium text-success">Target met — above 95%!</p>}
+        {passed && !targetMet && <p className="mt-4 text-sm font-medium text-warning">Passing mark reached — keep pushing toward 95%</p>}
+        {!passed && <p className="mt-4 text-sm font-medium text-error">Below passing mark (90%) — review and retry</p>}
+
         <div className="mt-4 flex items-center justify-center gap-4 text-sm text-charcoal/40">
-          <span className="flex items-center gap-1"><Clock size={14} /> {minutes}m {seconds}s</span>
+          <span className="flex items-center gap-1"><Clock size={14} /> {formatTime(finalElapsed)}</span>
           <span className="flex items-center gap-1"><Brain size={14} /> {activeQuestions.length} questions</span>
         </div>
 
         <div className="mt-8 flex items-center justify-center gap-3">
           <button
             onClick={handleRetry}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary-600"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
           >
             <RotateCcw size={16} /> Retry
           </button>
           <button
             onClick={() => setSelectedQuizId(null)}
-            className="rounded-xl border border-primary/20 px-6 py-3 font-medium text-primary hover:bg-primary-50"
+            className="rounded-xl border border-primary/20 px-6 py-3 font-medium text-primary hover:bg-primary/5"
           >
             All quizzes
           </button>
@@ -206,6 +212,7 @@ export default function QuizPage() {
 
   const handleNext = () => {
     if (current + 1 >= activeQuestions.length) {
+      setFinalElapsed(elapsed);
       setDone(true);
     } else {
       setCurrent((c) => c + 1);
@@ -228,7 +235,12 @@ export default function QuizPage() {
           <h1 className="font-heading text-xl font-bold text-primary">{selectedSet?.title}</h1>
           <p className="text-xs text-charcoal/40">{selectedSet?.subject}</p>
         </div>
-        <span className="text-sm text-charcoal/40">{score}/{current + (answered ? 1 : 0)} correct</span>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 font-mono text-sm text-primary">
+            <Clock size={13} /> {formatTime(elapsed)}
+          </span>
+          <span className="text-sm text-charcoal/40">{score}/{current + (answered ? 1 : 0)} correct</span>
+        </div>
       </div>
 
       <div className="mt-4 h-2 rounded-full bg-primary/10">
@@ -244,9 +256,9 @@ export default function QuizPage() {
         <h2 className="mt-2 font-heading text-xl font-semibold text-primary">{q.question}</h2>
         <div className="mt-6 space-y-3">
           {q.options.map((opt, idx) => {
-            let style = "border-primary/10 hover:border-primary/20 hover:bg-neutral/50";
-            if (answered && idx === q.correct) style = "border-green-500 bg-green-50";
-            else if (answered && idx === selected) style = "border-red-400 bg-red-50";
+            let style = "border-primary/10 hover:border-primary/20 hover:bg-primary/5";
+            if (answered && idx === q.correct) style = "border-success bg-success/10";
+            else if (answered && idx === selected) style = "border-error bg-error/10";
 
             return (
               <button
@@ -255,8 +267,8 @@ export default function QuizPage() {
                 className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left text-sm transition ${style}`}
               >
                 <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                  answered && idx === q.correct ? "bg-green-500 text-white" :
-                  answered && idx === selected ? "bg-red-400 text-white" :
+                  answered && idx === q.correct ? "bg-success text-white" :
+                  answered && idx === selected ? "bg-error text-white" :
                   "bg-primary/10 text-primary"
                 }`}>
                   {answered && idx === q.correct ? <Check size={14} /> :
@@ -271,7 +283,7 @@ export default function QuizPage() {
 
         {answered && q.hint && (
           <div className="mt-4 rounded-xl bg-gold/10 p-4">
-            <p className="text-sm font-medium text-amber-800">
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-400">
               <span className="font-semibold">Tip: </span>{q.hint}
             </p>
           </div>
@@ -280,7 +292,7 @@ export default function QuizPage() {
         {answered && (
           <button
             onClick={handleNext}
-            className="mt-4 flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary-600"
+            className="mt-4 flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
           >
             {current + 1 >= activeQuestions.length ? "See Results" : "Next Question"}
             <ChevronRight size={16} />
