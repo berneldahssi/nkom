@@ -63,8 +63,8 @@ const config: Config = {
         dropdown: "0 4px 16px -2px rgb(0 0 0 / 0.12), 0 2px 4px -2px rgb(0 0 0 / 0.08)",
       },
       fontFamily: {
-        heading: ["Montserrat", "sans-serif"],
-        body: ["Inter", "sans-serif"],
+        heading: ["var(--font-heading)", "Montserrat", "sans-serif"],
+        body: ["var(--font-body)", "Inter", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
