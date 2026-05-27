@@ -48,7 +48,6 @@ module "vpc" {
   availability_zones      = data.aws_availability_zones.available.names
   private_subnet_cidrs    = var.private_subnet_cidrs
   public_subnet_cidrs     = var.public_subnet_cidrs
-  single_nat_gateway      = var.environment != "production"
   flow_log_retention_days = var.flow_log_retention_days
 }
 
@@ -92,7 +91,7 @@ module "rds" {
   backup_retention_days       = var.db_backup_retention_days
   backup_window               = var.db_backup_window
   maintenance_window          = var.db_maintenance_window
-  multi_az                    = var.environment == "production"
+  multi_az                    = false  # single-AZ keeps RDS in free tier (750h/mo for 12 months)
   deletion_protection         = var.environment == "production"
   skip_final_snapshot         = var.environment != "production"
   enable_monitoring           = var.environment == "production"
@@ -141,9 +140,20 @@ module "monitoring" {
   alert_email         = var.alert_email
   create_rds_alarms   = var.environment == "production"
   create_redis_alarms = var.environment == "production" && var.enable_redis
-  create_dashboard    = var.environment == "production"
+  create_dashboard    = false  # $3/mo — enable when you have enough metrics to watch
   rds_instance_id     = module.rds.db_instance_id
   redis_cluster_id    = local.redis_cluster_id
+}
+
+# ── S3 VPC Gateway Endpoint (free — keeps S3 traffic off NAT) ────
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.${var.aws_region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = module.vpc.private_route_table_ids
+
+  tags = { Name = "${var.project_name}-s3-endpoint" }
 }
 
 # ── Cognito Auth ─────────────────────────────────────────────────

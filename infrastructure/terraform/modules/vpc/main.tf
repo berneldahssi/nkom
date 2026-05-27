@@ -18,15 +18,11 @@ module "vpc" {
   private_subnets = var.private_subnet_cidrs
   public_subnets  = var.public_subnet_cidrs
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = var.single_nat_gateway
+  enable_nat_gateway   = false  # re-enable when ECS is deployed; RDS/S3 don't need internet
   enable_dns_hostnames = true
 
   # VPC Flow Logs for security monitoring
-  enable_flow_log                      = true
-  create_flow_log_cloudwatch_iam_role  = true
-  create_flow_log_cloudwatch_log_group = true
-  flow_log_cloudwatch_log_group_retention_in_days = var.flow_log_retention_days
+  enable_flow_log = false  # $0.50/GB ingested — re-enable for compliance/security audits
 
   tags = {
     Name = "${var.project_name}-vpc"
