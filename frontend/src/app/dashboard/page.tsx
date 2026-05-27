@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
   const stats = {
     studyStreak: 3,
     materialsCount: 14,
@@ -65,7 +68,7 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">
-            Good morning, Bernel!
+            {greeting}, Bernel!
           </h1>
           <p className="mt-1 text-sm text-charcoal/50">
             PSTAR target: 95%+ · {stats.flashcardsDue} flashcards ready to review.
@@ -79,6 +82,25 @@ export default function DashboardPage() {
           Upload material
         </Link>
       </div>
+
+      {/* PSTAR readiness banner */}
+      <Link
+        href="/dashboard/quiz"
+        className="mt-6 flex items-center justify-between rounded-2xl bg-gradient-to-r from-primary to-primary/80 p-5 text-white shadow-card transition hover:shadow-md"
+      >
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15">
+            <Plane size={24} className="-rotate-12 text-white" />
+          </div>
+          <div>
+            <p className="font-heading text-lg font-semibold">Ready for your PSTAR?</p>
+            <p className="text-sm text-white/70">Take a full 50-question exam simulation — target 95%+</p>
+          </div>
+        </div>
+        <div className="hidden items-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 text-sm font-medium sm:flex">
+          Start exam <ArrowRight size={14} />
+        </div>
+      </Link>
 
       {/* Stats */}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
