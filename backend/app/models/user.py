@@ -19,7 +19,10 @@ class User(Base):
     email: Mapped[str] = mapped_column(
         String(255), unique=True, nullable=False, index=True
     )
-    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    cognito_sub: Mapped[str | None] = mapped_column(
+        String(128), unique=True, nullable=True, index=True
+    )
+    password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     first_name: Mapped[str | None] = mapped_column(String(100))
     last_name: Mapped[str | None] = mapped_column(String(100))
     phone: Mapped[str | None] = mapped_column(String(20))
