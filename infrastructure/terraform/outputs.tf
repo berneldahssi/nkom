@@ -40,15 +40,15 @@ output "db_instance_id" {
   value       = module.rds.db_instance_id
 }
 
-# Redis Outputs
+# Redis Outputs (only populated when enable_redis = true)
 output "redis_endpoint" {
   description = "ElastiCache Redis endpoint"
-  value       = module.redis.redis_endpoint
+  value       = var.enable_redis ? module.redis[0].redis_endpoint : null
 }
 
 output "redis_port" {
   description = "Redis port"
-  value       = module.redis.redis_port
+  value       = var.enable_redis ? module.redis[0].redis_port : null
 }
 
 # Security Groups Outputs
@@ -78,20 +78,20 @@ output "s3_logs_bucket_name" {
   value       = module.s3.logs_bucket_id
 }
 
-# KMS Outputs
+# KMS Outputs (only populated when enable_kms_custom_keys = true)
 output "kms_rds_key_id" {
   description = "KMS key ID for RDS encryption"
-  value       = module.kms.rds_key_id
+  value       = var.enable_kms_custom_keys ? module.kms[0].rds_key_id : null
 }
 
 output "kms_s3_key_id" {
   description = "KMS key ID for S3 encryption"
-  value       = module.kms.s3_key_id
+  value       = var.enable_kms_custom_keys ? module.kms[0].s3_key_id : null
 }
 
 output "kms_secrets_key_id" {
   description = "KMS key ID for Secrets Manager"
-  value       = module.kms.secrets_key_id
+  value       = var.enable_kms_custom_keys ? module.kms[0].secrets_key_id : null
 }
 
 # Monitoring Outputs
@@ -117,8 +117,8 @@ output "backend_configuration" {
     db_host              = module.rds.db_host
     db_port              = module.rds.db_port
     db_name              = module.rds.db_name
-    redis_host           = module.redis.redis_endpoint
-    redis_port           = module.redis.redis_port
+    redis_host           = var.enable_redis ? module.redis[0].redis_endpoint : null
+    redis_port           = var.enable_redis ? module.redis[0].redis_port : null
     s3_uploads_bucket    = module.s3.uploads_bucket_id
     app_security_group   = module.security_groups.app_security_group_id
   }

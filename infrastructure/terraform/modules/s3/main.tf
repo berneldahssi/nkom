@@ -66,6 +66,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "uploads" {
   rule {
     id     = "delete-old-versions"
     status = "Enabled"
+    filter {}
 
     noncurrent_version_expiration {
       noncurrent_days = var.version_expiration_days
@@ -123,6 +124,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "logs" {
   rule {
     id     = "delete-old-logs"
     status = "Enabled"
+    filter {}
 
     expiration {
       days = var.logs_expiration_days
