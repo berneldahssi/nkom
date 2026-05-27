@@ -18,16 +18,19 @@ output "public_subnets" {
 output "db_endpoint" {
   description = "RDS PostgreSQL endpoint (host:port)"
   value       = module.rds.db_endpoint
+  sensitive   = false
 }
 
 output "db_host" {
   description = "RDS hostname"
   value       = module.rds.db_host
+  sensitive   = false
 }
 
 output "db_port" {
   description = "RDS port"
   value       = module.rds.db_port
+  sensitive   = false
 }
 
 output "db_name" {
