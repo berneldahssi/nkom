@@ -10,11 +10,11 @@ terraform {
 
   # Backend created by infrastructure/terraform/bootstrap — run bootstrap first.
   backend "s3" {
-    bucket         = "nkom-terraform-state"
-    key            = "prod/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "nkom-terraform-locks"
-    encrypt        = true
+    bucket       = "nkom-terraform-state"
+    key          = "prod/terraform.tfstate"
+    region       = "us-east-1"
+    use_lockfile = true  # native S3 locking (TF >= 1.10, requires versioning)
+    encrypt      = true
   }
 }
 
