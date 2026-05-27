@@ -10,14 +10,16 @@ import {
   LogOut,
   Upload,
   Layers,
-  Brain,
   GraduationCap,
   Menu,
   X,
   Bell,
   ChevronDown,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { useState } from "react";
+import { useTheme } from "@/context/ThemeContext";
 
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard" },
@@ -32,6 +34,7 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   return (
     <div className="flex min-h-screen bg-neutral">
@@ -87,7 +90,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
               B
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-charcoal">Bernel Dahssi</p>
               <p className="truncate text-xs text-charcoal/40">Free plan</p>
             </div>
@@ -107,6 +110,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Menu size={22} className="text-charcoal/60" />
           </button>
           <div className="flex-1" />
+
+          {/* Dark / Light mode toggle */}
+          <button
+            onClick={toggle}
+            aria-label="Toggle dark mode"
+            className="rounded-lg p-2 text-charcoal/40 transition hover:bg-neutral hover:text-charcoal/70"
+          >
+            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
           <button className="relative rounded-lg p-2 text-charcoal/40 transition hover:bg-neutral hover:text-charcoal/60">
             <Bell size={20} />
             <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-terracotta" />

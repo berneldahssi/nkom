@@ -6,9 +6,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // NKOM brand palette
+        // NKOM brand palette — primary/neutral/charcoal use CSS variables so dark mode remaps automatically
         primary: {
-          DEFAULT: "#1E3A5F",
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
           50: "#E8EEF5",
           100: "#C5D3E5",
           200: "#9FB4D0",
@@ -47,10 +47,10 @@ const config: Config = {
           900: "#625116",
         },
         neutral: {
-          DEFAULT: "#F5F5F0",
+          DEFAULT: "rgb(var(--color-neutral) / <alpha-value>)",
         },
         charcoal: {
-          DEFAULT: "#2C2C2C",
+          DEFAULT: "rgb(var(--color-charcoal) / <alpha-value>)",
         },
       },
       fontFamily: {

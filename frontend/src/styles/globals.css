@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light mode color tokens */
+:root {
+  --color-primary: 30 58 95;       /* #1E3A5F navy */
+  --color-neutral: 245 245 240;    /* #F5F5F0 warm off-white */
+  --color-charcoal: 44 44 44;      /* #2C2C2C near-black */
+  --color-card: 255 255 255;       /* card backgrounds */
+}
+
+/* Dark mode color tokens */
+.dark {
+  --color-primary: 120 149 186;    /* #7895BA primary-300 — readable on dark */
+  --color-neutral: 11 22 35;       /* #0B1623 deep navy page bg */
+  --color-charcoal: 220 230 242;   /* #DCE6F2 near-white body text */
+  --color-card: 18 32 50;          /* #122032 dark card bg */
+}
+
 @layer base {
   body {
     @apply bg-neutral text-charcoal antialiased;
@@ -10,6 +26,19 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', system-ui, sans-serif;
   }
+}
+
+/* Dark mode: remap white surfaces to dark cards */
+.dark .bg-white {
+  background-color: rgb(var(--color-card));
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e3a5f;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #2a4f80;
 }
 
 /* Smooth scrolling */
