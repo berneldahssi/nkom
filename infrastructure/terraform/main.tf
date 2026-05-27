@@ -126,6 +126,19 @@ module "monitoring" {
   redis_cluster_id     = module.redis.redis_cluster_id
 }
 
+# Cognito — User Pool, Google IdP, Amplify app client
+module "cognito" {
+  source = "./modules/cognito"
+
+  project_name         = var.project_name
+  environment          = var.environment
+  app_url              = var.app_url
+  google_client_id     = var.google_client_id
+  google_client_secret = var.google_client_secret
+  ses_from_email       = var.ses_from_email
+  ses_arn              = var.ses_arn
+}
+
 # Data source for availability zones
 data "aws_availability_zones" "available" {
   state = "available"

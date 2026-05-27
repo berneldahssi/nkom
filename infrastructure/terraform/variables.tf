@@ -196,3 +196,36 @@ variable "alert_email" {
   type        = string
   default     = ""
 }
+
+# ── Cognito / Auth ─────────────────────────────────────────────────────────────
+variable "app_url" {
+  description = "Production frontend URL used for Cognito OAuth callback (e.g. https://nkom.app)"
+  type        = string
+  default     = "https://nkom.app"
+}
+
+variable "google_client_id" {
+  description = "Google OAuth 2.0 client ID — leave empty to skip Google IdP"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "google_client_secret" {
+  description = "Google OAuth 2.0 client secret"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "ses_from_email" {
+  description = "SES-verified sender email for auth emails (optional — uses Cognito default when empty)"
+  type        = string
+  default     = ""
+}
+
+variable "ses_arn" {
+  description = "SES identity ARN — required when ses_from_email is set"
+  type        = string
+  default     = ""
+}
