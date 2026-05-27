@@ -63,6 +63,27 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
+    # ── Cognito ──────────────────────────────────────────────────
+    COGNITO_USER_POOL_ID: str = ""
+    COGNITO_CLIENT_ID: str = ""
+    COGNITO_REGION: str = ""  # falls back to AWS_REGION when empty
+
+    @property
+    def cognito_enabled(self) -> bool:
+        return bool(self.COGNITO_USER_POOL_ID and self.COGNITO_CLIENT_ID)
+
+    @property
+    def _cognito_region(self) -> str:
+        return self.COGNITO_REGION or self.AWS_REGION
+
+    @property
+    def cognito_issuer(self) -> str:
+        return f"https://cognito-idp.{self._cognito_region}.amazonaws.com/{self.COGNITO_USER_POOL_ID}"
+
+    @property
+    def cognito_jwks_uri(self) -> str:
+        return f"{self.cognito_issuer}/.well-known/jwks.json"
+
     # ── AWS ──────────────────────────────────────────────────────
     AWS_REGION: str = "us-east-1"
     AWS_ACCESS_KEY_ID: str = ""

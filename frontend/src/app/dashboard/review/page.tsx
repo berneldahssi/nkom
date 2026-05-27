@@ -10,18 +10,31 @@ import {
   Brain,
   Plane,
   Keyboard,
+  CalendarCheck,
 } from "lucide-react";
 import { PSTAR_FLASHCARDS } from "@/lib/pstar-data";
+import {
+  type Rating,
+  getDueCards,
+  updateCardState,
+  previewIntervalLabels,
+  getDueCount,
+} from "@/lib/sm2";
 
 const SESSION_SIZE = 20;
 
-type Rating = "again" | "hard" | "good" | "easy";
-
 export default function ReviewPage() {
-  const flashcards = useMemo(
-    () => [...PSTAR_FLASHCARDS].sort(() => Math.random() - 0.5).slice(0, SESSION_SIZE),
-    []
-  );
+  const [initialized, setInitialized] = useState(false);
+  const [sessionCards, setSessionCards] = useState<typeof PSTAR_FLASHCARDS>([]);
+  const [totalDue, setTotalDue] = useState(0);
+
+  // Load due cards client-side (localStorage not available on server)
+  useEffect(() => {
+    const due = getDueCards(PSTAR_FLASHCARDS, SESSION_SIZE);
+    setSessionCards(due);
+    setTotalDue(getDueCount(PSTAR_FLASHCARDS));
+    setInitialized(true);
+  }, []);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -29,26 +42,42 @@ export default function ReviewPage() {
   const [showHint, setShowHint] = useState(false);
   const [showKbHint, setShowKbHint] = useState(false);
 
-  const remaining = flashcards.length - reviewed.length;
-  const currentCard = flashcards[currentIndex];
-  const isDone = reviewed.length === flashcards.length;
+  const remaining = sessionCards.length - reviewed.length;
+  const currentCard = sessionCards[currentIndex];
+  const isDone = initialized && reviewed.length === sessionCards.length;
+  const nothingDue = initialized && sessionCards.length === 0;
 
-  const handleRate = useCallback((rating: Rating) => {
-    setReviewed((r) => [...r, { id: currentCard.id, rating }]);
-    setFlipped(false);
-    setShowHint(false);
-    const reviewedIds = new Set([...reviewed.map((r) => r.id), currentCard.id]);
-    const nextIndex = flashcards.findIndex((c, i) => i > currentIndex && !reviewedIds.has(c.id));
-    if (nextIndex !== -1) {
-      setCurrentIndex(nextIndex);
-    } else {
-      const firstUnreviewed = flashcards.findIndex((c) => !reviewedIds.has(c.id));
-      if (firstUnreviewed !== -1) setCurrentIndex(firstUnreviewed);
-    }
-  }, [currentCard, currentIndex, flashcards, reviewed]);
+  // Preview intervals for the current card's rating buttons
+  const intervals = useMemo(
+    () => (currentCard ? previewIntervalLabels(currentCard.id) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentCard?.id, reviewed.length]
+  );
+
+  const handleRate = useCallback(
+    (rating: Rating) => {
+      if (!currentCard) return;
+      updateCardState(currentCard.id, rating);
+      setReviewed((r) => [...r, { id: currentCard.id, rating }]);
+      setFlipped(false);
+      setShowHint(false);
+
+      const reviewedIds = new Set([...reviewed.map((r) => r.id), currentCard.id]);
+      const nextIndex = sessionCards.findIndex(
+        (c, i) => i > currentIndex && !reviewedIds.has(c.id)
+      );
+      if (nextIndex !== -1) {
+        setCurrentIndex(nextIndex);
+      } else {
+        const firstUnreviewed = sessionCards.findIndex((c) => !reviewedIds.has(c.id));
+        if (firstUnreviewed !== -1) setCurrentIndex(firstUnreviewed);
+      }
+    },
+    [currentCard, currentIndex, sessionCards, reviewed]
+  );
 
   useEffect(() => {
-    if (isDone) return;
+    if (isDone || nothingDue) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === "Space") {
@@ -64,13 +93,37 @@ export default function ReviewPage() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [flipped, isDone, handleRate]);
+  }, [flipped, isDone, nothingDue, handleRate]);
 
+  // All caught up screen
+  if (nothingDue) {
+    return (
+      <div className="mx-auto max-w-lg px-6 py-16 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-success/10">
+          <CalendarCheck size={40} className="text-success" />
+        </div>
+        <h1 className="mt-6 font-heading text-2xl font-bold text-primary">All caught up!</h1>
+        <p className="mt-2 text-charcoal/60">No flashcards are due for review right now.</p>
+        <p className="mt-1 text-sm text-charcoal/40">
+          Come back tomorrow — your next cards will be ready then.
+        </p>
+        <Link
+          href="/dashboard"
+          className="mt-8 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
+        >
+          Back to dashboard
+        </Link>
+      </div>
+    );
+  }
+
+  // Session complete screen
   if (isDone) {
     const ratings = { again: 0, hard: 0, good: 0, easy: 0 };
     reviewed.forEach((r) => ratings[r.rating]++);
     const retained = ratings.good + ratings.easy;
-    const retentionPct = Math.round((retained / flashcards.length) * 100);
+    const retentionPct = Math.round((retained / sessionCards.length) * 100);
+    const stillDue = Math.max(0, totalDue - sessionCards.length);
 
     return (
       <div className="mx-auto max-w-lg px-6 py-16 text-center">
@@ -78,7 +131,7 @@ export default function ReviewPage() {
           <CheckCircle2 size={40} className="text-success" />
         </div>
         <h1 className="mt-6 font-heading text-2xl font-bold text-primary">Session Complete!</h1>
-        <p className="mt-2 text-charcoal/60">You reviewed {flashcards.length} PSTAR flashcards.</p>
+        <p className="mt-2 text-charcoal/60">You reviewed {sessionCards.length} PSTAR flashcards.</p>
         <p className="mt-1 text-sm font-semibold text-terracotta">{retentionPct}% retention this session</p>
         <div className="mt-8 grid grid-cols-4 gap-3">
           {[
@@ -93,13 +146,41 @@ export default function ReviewPage() {
             </div>
           ))}
         </div>
+        {stillDue > 0 && (
+          <p className="mt-4 text-sm text-charcoal/40">
+            {stillDue} more card{stillDue !== 1 ? "s" : ""} still due today.
+          </p>
+        )}
         <div className="mt-8 flex items-center justify-center gap-3">
-          <button
-            onClick={() => { setReviewed([]); setCurrentIndex(0); setFlipped(false); }}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
-          >
-            <RotateCcw size={16} /> New session
-          </button>
+          {stillDue > 0 ? (
+            <button
+              onClick={() => {
+                const due = getDueCards(PSTAR_FLASHCARDS, SESSION_SIZE);
+                setSessionCards(due);
+                setTotalDue(getDueCount(PSTAR_FLASHCARDS));
+                setReviewed([]);
+                setCurrentIndex(0);
+                setFlipped(false);
+              }}
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
+            >
+              <RotateCcw size={16} /> Continue ({stillDue} left)
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                const due = getDueCards(PSTAR_FLASHCARDS, SESSION_SIZE);
+                setSessionCards(due);
+                setTotalDue(getDueCount(PSTAR_FLASHCARDS));
+                setReviewed([]);
+                setCurrentIndex(0);
+                setFlipped(false);
+              }}
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
+            >
+              <RotateCcw size={16} /> New session
+            </button>
+          )}
           <Link
             href="/dashboard"
             className="rounded-xl border border-primary/20 px-6 py-3 font-medium text-primary hover:bg-primary/5"
@@ -107,6 +188,16 @@ export default function ReviewPage() {
             Dashboard
           </Link>
         </div>
+      </div>
+    );
+  }
+
+  // Loading skeleton
+  if (!initialized || !currentCard) {
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-8 animate-pulse">
+        <div className="h-8 w-40 rounded-lg bg-primary/10" />
+        <div className="mt-8 h-72 rounded-2xl bg-primary/5" />
       </div>
     );
   }
@@ -149,7 +240,7 @@ export default function ReviewPage() {
       <div className="mt-4 h-2 rounded-full bg-primary/10">
         <div
           className="h-full rounded-full bg-terracotta transition-all"
-          style={{ width: `${(reviewed.length / flashcards.length) * 100}%` }}
+          style={{ width: `${(reviewed.length / sessionCards.length) * 100}%` }}
         />
       </div>
 
@@ -239,12 +330,14 @@ export default function ReviewPage() {
               </button>
             ))}
           </div>
-          <div className="mt-2 grid grid-cols-4 gap-2 text-center text-xs text-charcoal/30">
-            <span>&lt;1 min</span>
-            <span>1 day</span>
-            <span>3 days</span>
-            <span>7 days</span>
-          </div>
+          {intervals && (
+            <div className="mt-2 grid grid-cols-4 gap-2 text-center text-xs text-charcoal/30">
+              <span>{intervals.again}</span>
+              <span>{intervals.hard}</span>
+              <span>{intervals.good}</span>
+              <span>{intervals.easy}</span>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -15,15 +16,22 @@ import {
   ChevronRight,
   Plane,
 } from "lucide-react";
+import { PSTAR_FLASHCARDS } from "@/lib/pstar-data";
+import { getDueCount } from "@/lib/sm2";
 
 export default function DashboardPage() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
+  const [flashcardsDue, setFlashcardsDue] = useState(0);
+  useEffect(() => {
+    setFlashcardsDue(getDueCount(PSTAR_FLASHCARDS));
+  }, []);
+
   const stats = {
     studyStreak: 3,
     materialsCount: 14,
-    flashcardsDue: 20,
+    flashcardsDue,
     totalMinutes: 120,
     quizAvg: 74,
     conceptsMastered: 0,
