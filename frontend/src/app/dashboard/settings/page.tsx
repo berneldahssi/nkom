@@ -9,26 +9,30 @@ import {
   Shield,
   Globe,
   Moon,
+  Sun,
   Check,
   Eye,
   Headphones,
   BookOpen,
   Pencil,
+  Palette,
 } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
+import { useToast } from "@/components/ui/Toast";
 
-type SettingsTab = "profile" | "learning" | "notifications" | "subscription" | "privacy";
+type SettingsTab = "profile" | "appearance" | "learning" | "notifications" | "subscription" | "privacy";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
-  const [saved, setSaved] = useState(false);
+  const { theme, toggle } = useTheme();
+  const { toast } = useToast();
 
-  const showSaved = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
+  const save = (label = "Settings saved") =>
+    toast({ title: label, description: "Your changes have been applied.", variant: "success" });
 
   const tabs: { key: SettingsTab; icon: React.ReactNode; label: string }[] = [
     { key: "profile", icon: <User size={16} />, label: "Profile" },
+    { key: "appearance", icon: <Palette size={16} />, label: "Appearance" },
     { key: "learning", icon: <Brain size={16} />, label: "Learning" },
     { key: "notifications", icon: <Bell size={16} />, label: "Notifications" },
     { key: "subscription", icon: <CreditCard size={16} />, label: "Subscription" },
@@ -40,13 +44,6 @@ export default function SettingsPage() {
       <h1 className="font-heading text-2xl font-bold text-primary">Settings</h1>
       <p className="mt-1 text-sm text-charcoal/50">Manage your account and preferences</p>
 
-      {/* Saved indicator */}
-      {saved && (
-        <div className="fixed right-6 top-20 z-50 flex items-center gap-2 rounded-xl bg-green-500 px-4 py-2.5 text-sm font-medium text-white shadow-lg animate-fade-in">
-          <Check size={16} /> Settings saved
-        </div>
-      )}
-
       {/* Tab navigation */}
       <div className="mt-8 flex gap-1 overflow-x-auto">
         {tabs.map((tab) => (
@@ -54,7 +51,7 @@ export default function SettingsPage() {
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition ${
-              activeTab === tab.key ? "bg-primary text-white" : "text-charcoal/50 hover:bg-neutral hover:text-charcoal"
+              activeTab === tab.key ? "bg-primary text-white" : "text-charcoal/50 hover:bg-primary/10 hover:text-charcoal"
             }`}
           >
             {tab.icon} {tab.label}
@@ -79,17 +76,17 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <p className="font-heading text-lg font-semibold text-primary">Bernel Dahssi</p>
-                  <p className="text-sm text-charcoal/50">bernel@example.com</p>
+                  <p className="text-sm text-charcoal/50">berneldahssi@gmail.com</p>
                 </div>
               </div>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <InputField label="First name" defaultValue="Bernel" />
                 <InputField label="Last name" defaultValue="Dahssi" />
-                <InputField label="Email" defaultValue="bernel@example.com" type="email" />
+                <InputField label="Email" defaultValue="berneldahssi@gmail.com" type="email" />
                 <InputField label="Phone" defaultValue="+1 (514) 555-0123" />
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-charcoal/60">Country</label>
-                  <select className="w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                  <select className="w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-[rgb(var(--color-card))]">
                     <option>Canada</option>
                     <option>Cameroon</option>
                     <option>Nigeria</option>
@@ -99,16 +96,69 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-charcoal/60">Timezone</label>
-                  <select className="w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                  <select className="w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-[rgb(var(--color-card))]">
                     <option>America/Montreal (EST)</option>
                     <option>Africa/Douala (WAT)</option>
                     <option>Europe/Paris (CET)</option>
                   </select>
                 </div>
               </div>
-              <button onClick={showSaved} className="mt-6 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-600">
+              <button
+                onClick={() => save("Profile updated")}
+                className="mt-6 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white transition hover:bg-primary/90"
+              >
                 Save changes
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "appearance" && (
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-primary/10 bg-white p-6">
+              <h2 className="font-heading text-lg font-semibold text-primary">Theme</h2>
+              <p className="mt-1 text-sm text-charcoal/50">Choose how NKOM looks on your device</p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <button
+                  onClick={() => { if (theme !== "dark") toggle(); save("Dark mode enabled"); }}
+                  className={`flex items-center gap-4 rounded-xl border-2 p-4 text-left transition ${
+                    theme === "dark"
+                      ? "border-terracotta bg-terracotta/5 ring-1 ring-terracotta/20"
+                      : "border-primary/10 hover:border-primary/20"
+                  }`}
+                >
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${
+                    theme === "dark" ? "bg-terracotta/15 text-terracotta" : "bg-primary/10 text-primary"
+                  }`}>
+                    <Moon size={22} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-charcoal">Dark mode</p>
+                    <p className="text-xs text-charcoal/40">Easier on the eyes at night</p>
+                  </div>
+                  {theme === "dark" && <Check size={18} className="shrink-0 text-terracotta" />}
+                </button>
+
+                <button
+                  onClick={() => { if (theme !== "light") toggle(); save("Light mode enabled"); }}
+                  className={`flex items-center gap-4 rounded-xl border-2 p-4 text-left transition ${
+                    theme === "light"
+                      ? "border-terracotta bg-terracotta/5 ring-1 ring-terracotta/20"
+                      : "border-primary/10 hover:border-primary/20"
+                  }`}
+                >
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${
+                    theme === "light" ? "bg-terracotta/15 text-terracotta" : "bg-primary/10 text-primary"
+                  }`}>
+                    <Sun size={22} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-charcoal">Light mode</p>
+                    <p className="text-xs text-charcoal/40">Classic bright interface</p>
+                  </div>
+                  {theme === "light" && <Check size={18} className="shrink-0 text-terracotta" />}
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -122,8 +172,8 @@ export default function SettingsPage() {
                 {[
                   { key: "visual", icon: <Eye size={20} />, label: "Visual", description: "Diagrams, charts, color-coding", selected: true },
                   { key: "auditory", icon: <Headphones size={20} />, label: "Auditory", description: "Audio recordings, narration", selected: false },
-                  { key: "reading", icon: <BookOpen size={20} />, label: "Reading/Writing", description: "Text summaries, notes, lists" },
-                  { key: "kinesthetic", icon: <Brain size={20} />, label: "Kinesthetic", description: "Interactive exercises, practice problems" },
+                  { key: "reading", icon: <BookOpen size={20} />, label: "Reading/Writing", description: "Text summaries, notes, lists", selected: false },
+                  { key: "kinesthetic", icon: <Brain size={20} />, label: "Kinesthetic", description: "Interactive exercises, practice problems", selected: false },
                 ].map((style) => (
                   <button
                     key={style.key}
@@ -151,44 +201,26 @@ export default function SettingsPage() {
             <div className="rounded-2xl border border-primary/10 bg-white p-6">
               <h2 className="font-heading text-lg font-semibold text-primary">Study Preferences</h2>
               <div className="mt-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-charcoal">Daily study goal</p>
-                    <p className="text-xs text-charcoal/40">How many minutes per day</p>
+                {[
+                  { label: "Daily study goal", sub: "How many minutes per day", options: ["15 minutes", "30 minutes", "45 minutes", "60 minutes", "90 minutes"], default: "45 minutes" },
+                  { label: "New cards per day", sub: "Maximum new flashcards to introduce", options: ["5 cards", "10 cards", "15 cards", "20 cards"], default: "15 cards" },
+                  { label: "Difficulty level", sub: "Default content difficulty", options: ["Beginner", "Intermediate", "Advanced"], default: "Intermediate" },
+                ].map((pref) => (
+                  <div key={pref.label} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-charcoal">{pref.label}</p>
+                      <p className="text-xs text-charcoal/40">{pref.sub}</p>
+                    </div>
+                    <select defaultValue={pref.default} className="rounded-lg border border-primary/15 px-3 py-2 text-sm dark:bg-[rgb(var(--color-card))]">
+                      {pref.options.map((o) => <option key={o}>{o}</option>)}
+                    </select>
                   </div>
-                  <select className="rounded-lg border border-primary/15 px-3 py-2 text-sm">
-                    <option>15 minutes</option>
-                    <option>30 minutes</option>
-                    <option selected>45 minutes</option>
-                    <option>60 minutes</option>
-                    <option>90 minutes</option>
-                  </select>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-charcoal">New cards per day</p>
-                    <p className="text-xs text-charcoal/40">Maximum new flashcards to introduce</p>
-                  </div>
-                  <select className="rounded-lg border border-primary/15 px-3 py-2 text-sm">
-                    <option>5 cards</option>
-                    <option>10 cards</option>
-                    <option selected>15 cards</option>
-                    <option>20 cards</option>
-                  </select>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-charcoal">Difficulty level</p>
-                    <p className="text-xs text-charcoal/40">Default content difficulty</p>
-                  </div>
-                  <select className="rounded-lg border border-primary/15 px-3 py-2 text-sm">
-                    <option>Beginner</option>
-                    <option selected>Intermediate</option>
-                    <option>Advanced</option>
-                  </select>
-                </div>
+                ))}
               </div>
-              <button onClick={showSaved} className="mt-6 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-600">
+              <button
+                onClick={() => save("Learning preferences updated")}
+                className="mt-6 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white transition hover:bg-primary/90"
+              >
                 Save preferences
               </button>
             </div>
@@ -253,20 +285,6 @@ export default function SettingsPage() {
                 ))}
               </ul>
             </div>
-
-            <div className="rounded-2xl border border-primary/10 bg-white p-6">
-              <h2 className="font-heading text-lg font-semibold text-primary">Payment Method</h2>
-              <div className="mt-4 flex items-center gap-3 rounded-xl border border-primary/10 p-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                  <CreditCard size={18} className="text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-charcoal">Visa ending in 4242</p>
-                  <p className="text-xs text-charcoal/40">Expires 12/2027</p>
-                </div>
-                <button className="ml-auto text-sm text-terracotta hover:underline">Update</button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -299,14 +317,14 @@ export default function SettingsPage() {
             <div className="rounded-2xl border border-primary/10 bg-white p-6">
               <h2 className="font-heading text-lg font-semibold text-primary">Data Management</h2>
               <div className="mt-4 space-y-3">
-                <button className="flex w-full items-center justify-between rounded-xl border border-primary/10 p-4 text-left text-sm transition hover:bg-neutral">
+                <button className="flex w-full items-center justify-between rounded-xl border border-primary/10 p-4 text-left text-sm transition hover:bg-primary/5">
                   <div className="flex items-center gap-3">
                     <Globe size={18} className="text-charcoal/40" />
                     <span>Export my data</span>
                   </div>
                   <span className="text-xs text-charcoal/30">GDPR compliant</span>
                 </button>
-                <button className="flex w-full items-center justify-between rounded-xl border border-red-200 p-4 text-left text-sm text-red-500 transition hover:bg-red-50">
+                <button className="flex w-full items-center justify-between rounded-xl border border-error/20 p-4 text-left text-sm text-error transition hover:bg-error/5">
                   <span>Delete my account</span>
                   <span className="text-xs">Permanent action</span>
                 </button>
@@ -326,7 +344,7 @@ function InputField({ label, defaultValue, type = "text" }: { label: string; def
       <input
         type={type}
         defaultValue={defaultValue}
-        className="w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+        className="w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-[rgb(var(--color-card))]"
       />
     </div>
   );

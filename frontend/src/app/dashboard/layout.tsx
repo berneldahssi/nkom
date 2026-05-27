@@ -69,7 +69,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                   isActive
                     ? "bg-primary/10 text-primary"
-                    : "text-charcoal/60 hover:bg-neutral hover:text-primary"
+                    : "text-charcoal/60 hover:bg-primary/10 hover:text-primary"
                 }`}
               >
                 <item.icon size={18} />
@@ -95,7 +95,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <p className="truncate text-xs text-charcoal/40">Free plan</p>
             </div>
           </div>
-          <button className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-charcoal/40 transition hover:bg-neutral hover:text-charcoal/60">
+          <button className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-charcoal/40 transition hover:bg-primary/10 hover:text-charcoal/60">
             <LogOut size={16} />
             Sign out
           </button>
@@ -115,12 +115,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <button
             onClick={toggle}
             aria-label="Toggle dark mode"
-            className="rounded-lg p-2 text-charcoal/40 transition hover:bg-neutral hover:text-charcoal/70"
+            className="rounded-lg p-2 text-charcoal/40 transition hover:bg-primary/10 hover:text-charcoal/70"
           >
             {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          <button className="relative rounded-lg p-2 text-charcoal/40 transition hover:bg-neutral hover:text-charcoal/60">
+          <button className="relative rounded-lg p-2 text-charcoal/40 transition hover:bg-primary/10 hover:text-charcoal/60">
             <Bell size={20} />
             <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-terracotta" />
           </button>
