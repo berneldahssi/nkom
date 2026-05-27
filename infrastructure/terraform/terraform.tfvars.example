@@ -1,28 +1,39 @@
 # NKOM Production Infrastructure Configuration
 # Copy this file to terraform.tfvars and fill in your values
+# terraform.tfvars is git-ignored — never commit real secrets
 
 project_name   = "nkom"
 environment    = "production"  # development, staging, or production
 aws_region     = "us-east-1"
 
-# Database Configuration
-db_instance_class = "db.t3.micro"  # Use db.t3.small or higher for production
+# ── Database ───────────────────────────────────────────────────────────────────
+db_instance_class = "db.t3.micro"  # db.t3.small or higher for production
 
-# Security: Generate these with strong random values
-# db_username should be 8+ chars, alphanumeric + underscore
-# db_password should be 16+ chars with uppercase, lowercase, numbers, special chars
-# redis_auth_token should be 16+ chars
+# db_username must be 8+ chars, alphanumeric + underscore only
+# db_password must be 16+ chars: uppercase, lowercase, numbers, special chars
+# db_username = "nkomadmin"
+# db_password = "SecureP@ssw0rd!2024abc"
+# redis_auth_token = "RedisAuth!Token@2024abc"
 
-# Example (DO NOT USE THESE IN PRODUCTION):
-# db_username = "nkom_admin"
-# db_password = "SecureP@ssw0rd!2024"
-# redis_auth_token = "RedisAuth!Token@2024"
+backup_retention_days = 7
 
-# Backup Configuration
-backup_retention_days = 7  # 1-35 days
+# ── Auth / Cognito ─────────────────────────────────────────────────────────────
+# Your production frontend URL (no trailing slash)
+app_url = "https://nkom.app"
 
-# To use these values:
-# 1. Copy to terraform.tfvars (git-ignored)
-# 2. Replace example values with strong credentials
-# 3. Run: terraform plan -var-file="terraform.tfvars"
-# 4. Run: terraform apply -var-file="terraform.tfvars"
+# Google OAuth
+# 1. Go to https://console.cloud.google.com/apis/credentials
+# 2. Create OAuth 2.0 Client ID (Web application type)
+# 3. Add authorized redirect URI:
+#    https://nkom-auth-production.auth.us-east-1.amazoncognito.com/oauth2/idpresponse
+# 4. Paste the credentials below
+# google_client_id     = "XXXXXXXXXX.apps.googleusercontent.com"
+# google_client_secret = "GOCSPX-XXXXXXXXXX"
+
+# SES (optional — leave commented to use Cognito's built-in 50 emails/day limit)
+# Uncomment once you verify a domain or email in SES:
+# ses_from_email = "no-reply@nkom.app"
+# ses_arn        = "arn:aws:ses:us-east-1:ACCOUNT_ID:identity/nkom.app"
+
+# ── Monitoring ─────────────────────────────────────────────────────────────────
+alert_email = "berneldahssi@gmail.com"

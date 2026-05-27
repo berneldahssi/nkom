@@ -110,6 +110,32 @@ output "rds_log_group_name" {
   value       = module.monitoring.rds_log_group_name
 }
 
+# ── Cognito Outputs — paste these into frontend .env.local ────────────────────
+output "cognito_user_pool_id" {
+  description = "→ NEXT_PUBLIC_COGNITO_USER_POOL_ID"
+  value       = module.cognito.user_pool_id
+}
+
+output "cognito_client_id" {
+  description = "→ NEXT_PUBLIC_COGNITO_CLIENT_ID"
+  value       = module.cognito.client_id
+}
+
+output "cognito_domain" {
+  description = "→ NEXT_PUBLIC_COGNITO_DOMAIN"
+  value       = module.cognito.hosted_domain
+}
+
+output "cognito_jwks_uri" {
+  description = "Backend JWT verification endpoint"
+  value       = module.cognito.jwks_uri
+}
+
+output "cognito_issuer" {
+  description = "Backend JWT issuer claim"
+  value       = module.cognito.issuer
+}
+
 # Combined Outputs for Backend Configuration
 output "backend_configuration" {
   description = "All outputs needed for backend .env configuration"
