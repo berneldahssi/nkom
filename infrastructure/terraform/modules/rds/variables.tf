@@ -14,8 +14,9 @@ variable "security_group_id" {
 }
 
 variable "kms_key_arn" {
-  description = "KMS key ARN for encryption"
+  description = "KMS key ARN for encryption. Null = use free AWS-managed default key."
   type        = string
+  default     = null
 }
 
 variable "engine_version" {

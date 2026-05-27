@@ -65,13 +65,13 @@ resource "aws_db_instance" "postgres" {
   backup_retention_period            = var.backup_retention_days
   backup_window                      = var.backup_window
   multi_az                           = var.multi_az
-  skip_final_snapshot                = !var.skip_final_snapshot
+  skip_final_snapshot                = var.skip_final_snapshot
   deletion_protection                = var.deletion_protection
   enabled_cloudwatch_logs_exports    = ["postgresql"]
   copy_tags_to_snapshot              = true
 
   # IAM database authentication
-  enabled_iam_database_authentication = true
+  iam_database_authentication_enabled = true
 
   # Enhanced monitoring
   monitoring_interval = var.enable_monitoring ? 60 : 0

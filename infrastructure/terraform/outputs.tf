@@ -18,16 +18,19 @@ output "public_subnets" {
 output "db_endpoint" {
   description = "RDS PostgreSQL endpoint (host:port)"
   value       = module.rds.db_endpoint
+  sensitive   = false
 }
 
 output "db_host" {
   description = "RDS hostname"
   value       = module.rds.db_host
+  sensitive   = false
 }
 
 output "db_port" {
   description = "RDS port"
   value       = module.rds.db_port
+  sensitive   = false
 }
 
 output "db_name" {
@@ -40,15 +43,15 @@ output "db_instance_id" {
   value       = module.rds.db_instance_id
 }
 
-# Redis Outputs
+# Redis Outputs (only populated when enable_redis = true)
 output "redis_endpoint" {
   description = "ElastiCache Redis endpoint"
-  value       = module.redis.redis_endpoint
+  value       = var.enable_redis ? module.redis[0].redis_endpoint : null
 }
 
 output "redis_port" {
   description = "Redis port"
-  value       = module.redis.redis_port
+  value       = var.enable_redis ? module.redis[0].redis_port : null
 }
 
 # Security Groups Outputs
@@ -78,20 +81,20 @@ output "s3_logs_bucket_name" {
   value       = module.s3.logs_bucket_id
 }
 
-# KMS Outputs
+# KMS Outputs (only populated when enable_kms_custom_keys = true)
 output "kms_rds_key_id" {
   description = "KMS key ID for RDS encryption"
-  value       = module.kms.rds_key_id
+  value       = var.enable_kms_custom_keys ? module.kms[0].rds_key_id : null
 }
 
 output "kms_s3_key_id" {
   description = "KMS key ID for S3 encryption"
-  value       = module.kms.s3_key_id
+  value       = var.enable_kms_custom_keys ? module.kms[0].s3_key_id : null
 }
 
 output "kms_secrets_key_id" {
   description = "KMS key ID for Secrets Manager"
-  value       = module.kms.secrets_key_id
+  value       = var.enable_kms_custom_keys ? module.kms[0].secrets_key_id : null
 }
 
 # Monitoring Outputs
@@ -110,6 +113,32 @@ output "rds_log_group_name" {
   value       = module.monitoring.rds_log_group_name
 }
 
+# Cognito Outputs — copy these into frontend/.env.local and backend/.env
+output "cognito_user_pool_id" {
+  description = "NEXT_PUBLIC_COGNITO_USER_POOL_ID"
+  value       = module.cognito.user_pool_id
+}
+
+output "cognito_client_id" {
+  description = "NEXT_PUBLIC_COGNITO_CLIENT_ID"
+  value       = module.cognito.client_id
+}
+
+output "cognito_domain" {
+  description = "NEXT_PUBLIC_COGNITO_DOMAIN"
+  value       = module.cognito.hosted_domain
+}
+
+output "cognito_jwks_uri" {
+  description = "Backend COGNITO_JWKS_URI for JWT verification"
+  value       = module.cognito.jwks_uri
+}
+
+output "cognito_issuer" {
+  description = "Backend COGNITO_ISSUER"
+  value       = module.cognito.issuer
+}
+
 # Combined Outputs for Backend Configuration
 output "backend_configuration" {
   description = "All outputs needed for backend .env configuration"
@@ -117,8 +146,8 @@ output "backend_configuration" {
     db_host              = module.rds.db_host
     db_port              = module.rds.db_port
     db_name              = module.rds.db_name
-    redis_host           = module.redis.redis_endpoint
-    redis_port           = module.redis.redis_port
+    redis_host           = var.enable_redis ? module.redis[0].redis_endpoint : null
+    redis_port           = var.enable_redis ? module.redis[0].redis_port : null
     s3_uploads_bucket    = module.s3.uploads_bucket_id
     app_security_group   = module.security_groups.app_security_group_id
   }

@@ -4,6 +4,21 @@ variable "project_name" {
   default     = "nkom"
 }
 
+# ── Cost toggles ─────────────────────────────────────────────────
+# Disable to save money during early development.
+
+variable "enable_redis" {
+  description = "Deploy ElastiCache Redis (~$13/month). Disable to skip."
+  type        = bool
+  default     = false
+}
+
+variable "enable_kms_custom_keys" {
+  description = "Create customer-managed KMS keys ($1/key/month × 3). Disable to use free AWS-managed encryption."
+  type        = bool
+  default     = false
+}
+
 variable "environment" {
   description = "Deployment environment (development, staging, production)"
   type        = string
@@ -193,6 +208,40 @@ variable "log_retention_days" {
 
 variable "alert_email" {
   description = "Email address for CloudWatch alarms"
+  type        = string
+  default     = ""
+}
+
+# ── Cognito ───────────────────────────────────────────────────────
+
+variable "app_url" {
+  description = "Frontend URL for Cognito OAuth callback (e.g. https://nkom.app)"
+  type        = string
+  default     = "http://localhost:3000"
+}
+
+variable "google_client_id" {
+  description = "Google OAuth client ID (leave empty to skip Google IdP)"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "google_client_secret" {
+  description = "Google OAuth client secret"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "ses_from_email" {
+  description = "Verified SES email for sending auth emails (leave empty to use Cognito default sender)"
+  type        = string
+  default     = ""
+}
+
+variable "ses_arn" {
+  description = "SES identity ARN (required when ses_from_email is set)"
   type        = string
   default     = ""
 }

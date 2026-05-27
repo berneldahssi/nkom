@@ -1,28 +1,39 @@
-# NKOM Production Infrastructure Configuration
-# Copy this file to terraform.tfvars and fill in your values
+# NKOM Infrastructure — copy to terraform.tfvars and fill in secrets.
+# terraform.tfvars is git-ignored; never commit it.
+#
+# Run:
+#   AWS_PROFILE=nkom terraform init
+#   AWS_PROFILE=nkom terraform plan
+#   AWS_PROFILE=nkom terraform apply
 
-project_name   = "nkom"
-environment    = "production"  # development, staging, or production
-aws_region     = "us-east-1"
+# ── General ───────────────────────────────────────────────────────
+project_name = "nkom"
+environment  = "production"
+aws_region   = "us-east-1"
 
-# Database Configuration
-db_instance_class = "db.t3.micro"  # Use db.t3.small or higher for production
+# ── Cost toggles ─────────────────────────────────────────────────
+# Start with both off to minimize monthly cost.
+# Redis:     enable when you need caching / Celery workers (~$13/mo)
+# KMS:       enable when you need customer-managed encryption (~$3/mo)
+enable_redis           = false
+enable_kms_custom_keys = false
 
-# Security: Generate these with strong random values
-# db_username should be 8+ chars, alphanumeric + underscore
-# db_password should be 16+ chars with uppercase, lowercase, numbers, special chars
-# redis_auth_token should be 16+ chars
+# ── Database ─────────────────────────────────────────────────────
+db_instance_class = "db.t3.micro"  # Free tier eligible for 12 months
+db_name           = "nkom"
 
-# Example (DO NOT USE THESE IN PRODUCTION):
-# db_username = "nkom_admin"
-# db_password = "SecureP@ssw0rd!2024"
-# redis_auth_token = "RedisAuth!Token@2024"
+# Credentials — generate strong values:
+#   python3 -c "import secrets,string; print(secrets.token_urlsafe(12))"  # username
+#   python3 -c "import secrets; print(secrets.token_urlsafe(24))"         # password
+db_username = "nkom_admin"
+db_password = "REPLACE_ME_min16chars_Aa1!"
 
-# Backup Configuration
-backup_retention_days = 7  # 1-35 days
+# ── Redis (only used when enable_redis = true) ────────────────────
+redis_node_type  = "cache.t3.micro"
+redis_auth_token = "REPLACE_ME_min16chars_Aa1!"
 
-# To use these values:
-# 1. Copy to terraform.tfvars (git-ignored)
-# 2. Replace example values with strong credentials
-# 3. Run: terraform plan -var-file="terraform.tfvars"
-# 4. Run: terraform apply -var-file="terraform.tfvars"
+# ── Backups ───────────────────────────────────────────────────────
+backup_retention_days = 7
+
+# ── Monitoring ────────────────────────────────────────────────────
+alert_email = "your@email.com"

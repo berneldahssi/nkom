@@ -4,8 +4,9 @@ variable "project_name" {
 }
 
 variable "kms_key_arn" {
-  description = "KMS key ARN for S3 encryption"
+  description = "KMS key ARN for S3 encryption. Null = use free AES-256 (SSE-S3) encryption."
   type        = string
+  default     = null
 }
 
 variable "version_expiration_days" {

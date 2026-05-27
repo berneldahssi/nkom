@@ -13,12 +13,17 @@ output "public_subnets" {
   value       = module.vpc.public_subnets
 }
 
-output "nat_gateway_id" {
-  description = "NAT Gateway ID"
-  value       = module.vpc.natgw_ids[0]
+output "nat_gateway_ids" {
+  description = "NAT Gateway IDs (empty until enable_nat_gateway = true)"
+  value       = module.vpc.natgw_ids
 }
 
 output "vpc_cidr" {
   description = "VPC CIDR block"
   value       = module.vpc.vpc_cidr_block
+}
+
+output "private_route_table_ids" {
+  description = "Private route table IDs (for VPC endpoint associations)"
+  value       = module.vpc.private_route_table_ids
 }

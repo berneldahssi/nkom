@@ -38,16 +38,16 @@ resource "aws_s3_bucket_versioning" "uploads" {
   }
 }
 
-# Server-side encryption with KMS
+# Server-side encryption — KMS if key provided, otherwise free AES-256 (SSE-S3)
 resource "aws_s3_bucket_server_side_encryption_configuration" "uploads" {
   bucket = aws_s3_bucket.uploads.id
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm     = "aws:kms"
+      sse_algorithm     = var.kms_key_arn != null ? "aws:kms" : "AES256"
       kms_master_key_id = var.kms_key_arn
     }
-    bucket_key_enabled = true
+    bucket_key_enabled = var.kms_key_arn != null
   }
 }
 
@@ -66,6 +66,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "uploads" {
   rule {
     id     = "delete-old-versions"
     status = "Enabled"
+    filter {}
 
     noncurrent_version_expiration {
       noncurrent_days = var.version_expiration_days
@@ -123,6 +124,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "logs" {
   rule {
     id     = "delete-old-logs"
     status = "Enabled"
+    filter {}
 
     expiration {
       days = var.logs_expiration_days

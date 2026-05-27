@@ -17,29 +17,30 @@ resource "aws_elasticache_subnet_group" "main" {
   }
 }
 
-# ElastiCache Redis cluster
-resource "aws_elasticache_cluster" "redis" {
-  cluster_id           = "${var.project_name}-redis"
+# ElastiCache Redis — replication group supports auth_token and encryption
+resource "aws_elasticache_replication_group" "redis" {
+  replication_group_id = "${var.project_name}-redis"
+  description          = "NKOM Redis cache"
+
   engine               = "redis"
   engine_version       = var.engine_version
   node_type            = var.node_type
-  num_cache_nodes      = var.num_cache_nodes
+  num_cache_clusters   = var.num_cache_nodes
   parameter_group_name = "default.redis${var.engine_version_short}"
-  subnet_group_name    = aws_elasticache_subnet_group.main.name
-  security_group_ids   = [var.security_group_id]
 
-  # Encryption in transit
+  subnet_group_name  = aws_elasticache_subnet_group.main.name
+  security_group_ids = [var.security_group_id]
+
+  # Encryption
   transit_encryption_enabled = true
-  auth_token                = var.auth_token
-
-  # Encryption at rest
+  auth_token                 = var.auth_token
   at_rest_encryption_enabled = true
 
-  # Automatic failover
+  # High availability (requires num_cache_clusters >= 2)
   automatic_failover_enabled = var.automatic_failover_enabled
 
-  # Maintenance
-  maintenance_window = var.maintenance_window
+  # Maintenance and notifications
+  maintenance_window     = var.maintenance_window
   notification_topic_arn = var.notification_topic_arn
 
   tags = {
