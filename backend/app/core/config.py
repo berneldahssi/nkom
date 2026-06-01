@@ -25,7 +25,16 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:8000",
+        "https://nkom.vercel.app",
     ]
+    # Comma-separated override from env (e.g. ALLOWED_ORIGINS=https://nkom.vercel.app,http://localhost:3000)
+    ALLOWED_ORIGINS: str = ""
+
+    @property
+    def cors_origins(self) -> list[str]:
+        if self.ALLOWED_ORIGINS:
+            return [o.strip() for o in self.ALLOWED_ORIGINS.split(",") if o.strip()]
+        return self.CORS_ORIGINS
 
     # ── Database ─────────────────────────────────────────────────
     POSTGRES_USER: str = "nkom"
@@ -62,6 +71,28 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # ── Cognito ──────────────────────────────────────────────────
+    COGNITO_USER_POOL_ID: str = ""
+    COGNITO_CLIENT_ID: str = ""
+    COGNITO_REGION: str = "us-east-1"
+    COGNITO_JWKS_URI: str = ""
+
+    @property
+    def cognito_jwks_uri(self) -> str:
+        if self.COGNITO_JWKS_URI:
+            return self.COGNITO_JWKS_URI
+        return (
+            f"https://cognito-idp.{self.COGNITO_REGION}.amazonaws.com"
+            f"/{self.COGNITO_USER_POOL_ID}/.well-known/jwks.json"
+        )
+
+    @property
+    def cognito_issuer(self) -> str:
+        return (
+            f"https://cognito-idp.{self.COGNITO_REGION}.amazonaws.com"
+            f"/{self.COGNITO_USER_POOL_ID}"
+        )
 
     # ── AWS ──────────────────────────────────────────────────────
     AWS_REGION: str = "us-east-1"

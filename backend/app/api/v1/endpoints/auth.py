@@ -1,96 +1,147 @@
-"""Authentication endpoints — register, login, refresh, password reset."""
+"""Authentication endpoints — provision (Cognito), legacy login kept for compat."""
+
+import uuid
+import structlog
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.security import (
-    create_access_token,
-    create_refresh_token,
-    decode_token,
-    hash_password,
-    verify_password,
-)
+from app.core.dependencies import get_current_active_user
+from app.models.flashcard import Flashcard
+from app.models.material_section import MaterialSection
+from app.models.quiz import QuizQuestion
+from app.models.study_material import StudyMaterial
 from app.models.user import User
-from app.schemas.auth import (
-    LoginRequest,
-    RefreshRequest,
-    RegisterRequest,
-    TokenResponse,
-)
+from app.data.pstar_seed import PSTAR_SECTIONS, ROCA_SECTIONS
+
+logger = structlog.get_logger()
 
 router = APIRouter()
 
 
-@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
-async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)) -> TokenResponse:
-    """Create a new user account."""
-    # Check if email already exists
-    existing = await db.execute(select(User).where(User.email == body.email))
-    if existing.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="An account with this email already exists",
+class ProvisionResponse(BaseModel):
+    user_id: str
+    email: str
+    provisioned: bool
+
+
+@router.post("/provision", response_model=ProvisionResponse)
+async def provision(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
+) -> ProvisionResponse:
+    """Idempotent — called after Cognito login to seed preset materials for the user."""
+
+    provisioned = False
+
+    # ── PSTAR ────────────────────────────────────────────────────
+    result = await db.execute(
+        select(StudyMaterial).where(
+            StudyMaterial.user_id == current_user.id,
+            StudyMaterial.exam_code == "PSTAR",
         )
-
-    user = User(
-        email=body.email,
-        password_hash=hash_password(body.password),
-        first_name=body.first_name,
-        last_name=body.last_name,
-        country=body.country,
-        subscription_tier="free",
     )
-    db.add(user)
-    await db.flush()
+    pstar_material = result.scalar_one_or_none()
 
-    return TokenResponse(
-        access_token=create_access_token(str(user.id)),
-        refresh_token=create_refresh_token(str(user.id)),
-    )
-
-
-@router.post("/login", response_model=TokenResponse)
-async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)) -> TokenResponse:
-    """Authenticate and return tokens."""
-    result = await db.execute(select(User).where(User.email == body.email))
-    user = result.scalar_one_or_none()
-
-    if not user or not verify_password(body.password, user.password_hash):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
+    if pstar_material is None:
+        provisioned = True
+        pstar_material = StudyMaterial(
+            user_id=current_user.id,
+            title="PSTAR — Student Pilot Permit",
+            subject="Air Regulations",
+            description="Transport Canada TP 11919E — 192 questions across 14 sections. Official question bank for the Student Pilot Permit exam.",
+            material_type="preset",
+            exam_code="PSTAR",
+            difficulty_level=2,
+            generated_formats={"flashcards": "available", "quiz": "available"},
         )
+        db.add(pstar_material)
+        await db.flush()
 
-    return TokenResponse(
-        access_token=create_access_token(str(user.id)),
-        refresh_token=create_refresh_token(str(user.id)),
-    )
+        for sec_num, sec_title, sec_diff, sec_summary, questions in PSTAR_SECTIONS:
+            section = MaterialSection(
+                material_id=pstar_material.id,
+                section_number=sec_num,
+                title=sec_title,
+                difficulty=sec_diff,
+                summary=sec_summary,
+            )
+            db.add(section)
+            await db.flush()
 
+            diff_map = {"easy": 1, "medium": 2, "hard": 3}
+            diff_int = diff_map.get(sec_diff, 2)
 
-@router.post("/refresh", response_model=TokenResponse)
-async def refresh_token(body: RefreshRequest) -> TokenResponse:
-    """Exchange a refresh token for a new access + refresh pair."""
-    try:
-        payload = decode_token(body.refresh_token)
-        if payload.get("type") != "refresh":
-            raise HTTPException(status_code=401, detail="Invalid token type")
-        user_id = payload["sub"]
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired refresh token",
+            for source_ref, q_text, options, correct_idx, hint in questions:
+                correct_answer = options[correct_idx]
+                qq = QuizQuestion(
+                    material_id=pstar_material.id,
+                    section_id=section.id,
+                    source_ref=source_ref,
+                    question_text=q_text,
+                    question_type="multiple_choice",
+                    options=options,
+                    correct_answer=correct_answer,
+                    hint=hint,
+                    difficulty=diff_int,
+                )
+                db.add(qq)
+
+                fc = Flashcard(
+                    material_id=pstar_material.id,
+                    section_id=section.id,
+                    user_id=current_user.id,
+                    front_text=q_text,
+                    back_text=correct_answer,
+                    mnemonic_hint=hint,
+                )
+                db.add(fc)
+
+        logger.info("PSTAR material seeded", user_id=str(current_user.id))
+
+    # ── ROC-A ────────────────────────────────────────────────────
+    result = await db.execute(
+        select(StudyMaterial).where(
+            StudyMaterial.user_id == current_user.id,
+            StudyMaterial.exam_code == "ROC-A",
         )
-
-    return TokenResponse(
-        access_token=create_access_token(user_id),
-        refresh_token=create_refresh_token(user_id),
     )
+    roca_material = result.scalar_one_or_none()
 
+    if roca_material is None:
+        provisioned = True
+        roca_material = StudyMaterial(
+            user_id=current_user.id,
+            title="ROC-A — Restricted Operator Certificate",
+            subject="Aeronautical Radiotelephony",
+            description="ISED RIC-21 — Canadian aviation radio operator certification. Required to legally operate aircraft radio equipment.",
+            material_type="preset",
+            exam_code="ROC-A",
+            difficulty_level=2,
+            generated_formats={"flashcards": "coming_soon", "quiz": "coming_soon"},
+        )
+        db.add(roca_material)
+        await db.flush()
 
-@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
-async def logout() -> None:
-    """Logout — client should discard tokens. Server-side blocklist is a TODO."""
-    # TODO: Add token to blocklist (Redis)
-    return None
+        for sec_num, sec_title, sec_diff, sec_summary in ROCA_SECTIONS:
+            section = MaterialSection(
+                material_id=roca_material.id,
+                section_number=sec_num,
+                title=sec_title,
+                difficulty=sec_diff,
+                summary=sec_summary,
+            )
+            db.add(section)
+
+        logger.info("ROC-A material seeded", user_id=str(current_user.id))
+
+    await db.commit()
+
+    return ProvisionResponse(
+        user_id=str(current_user.id),
+        email=current_user.email,
+        provisioned=provisioned,
+    )

@@ -26,6 +26,8 @@ class StudyMaterial(Base):
     title: Mapped[str] = mapped_column(String(255))
     subject: Mapped[str | None] = mapped_column(String(100))
     description: Mapped[str | None] = mapped_column(Text)
+    material_type: Mapped[str] = mapped_column(String(20), default="uploaded")  # preset | uploaded
+    exam_code: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)  # PSTAR | ROC-A | null
     source_type: Mapped[str | None] = mapped_column(
         String(50)
     )  # lecture_notes | textbook | article | other
@@ -45,8 +47,12 @@ class StudyMaterial(Base):
     # Relationships
     user = relationship("User", back_populates="study_materials")
     content = relationship("ContentUpload", back_populates="study_materials")
-    flashcards = relationship("Flashcard", back_populates="material", lazy="selectin")
-    quiz_questions = relationship("QuizQuestion", back_populates="material", lazy="selectin")
+    sections = relationship(
+        "MaterialSection", back_populates="material", lazy="select",
+        order_by="MaterialSection.section_number"
+    )
+    flashcards = relationship("Flashcard", back_populates="material", lazy="select")
+    quiz_questions = relationship("QuizQuestion", back_populates="material", lazy="select")
 
     def __repr__(self) -> str:
         return f"<StudyMaterial {self.title}>"

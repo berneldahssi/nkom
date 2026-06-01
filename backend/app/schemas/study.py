@@ -21,12 +21,54 @@ class MaterialResponse(BaseModel):
     title: str
     subject: str | None
     description: str | None
+    material_type: str
+    exam_code: str | None
     source_type: str | None
     summary: str | None
     podcast_url: str | None
     generated_formats: dict | None
     difficulty_level: int | None
     created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class SectionResponse(BaseModel):
+    id: uuid.UUID
+    section_number: int | None
+    title: str
+    summary: str | None
+    difficulty: str | None
+    question_count: int = 0
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class QuizQuestionPublicResponse(BaseModel):
+    """Question for quiz/flashcard — correct_answer included (frontend controls visibility)."""
+
+    id: uuid.UUID
+    source_ref: str | None
+    question_text: str
+    question_type: str
+    options: list[str] | None
+    correct_answer: str
+    hint: str | None
+    difficulty: int | None
+
+    model_config = {"from_attributes": True}
+
+
+class FlashcardPublicResponse(BaseModel):
+    id: uuid.UUID
+    source_ref: str | None = None
+    front_text: str
+    back_text: str
+    mnemonic_hint: str | None
+    ease_factor: float
+    interval: int
+    next_review: datetime | None
 
     model_config = {"from_attributes": True}
 

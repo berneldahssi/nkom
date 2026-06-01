@@ -21,6 +21,12 @@ class Flashcard(Base):
         ForeignKey("study_materials.id", ondelete="CASCADE"),
         index=True,
     )
+    section_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("material_sections.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
@@ -41,6 +47,7 @@ class Flashcard(Base):
 
     # Relationships
     material = relationship("StudyMaterial", back_populates="flashcards")
+    section = relationship("MaterialSection", back_populates="flashcards")
     user = relationship("User", back_populates="flashcards")
 
     def __repr__(self) -> str:
