@@ -128,7 +128,7 @@ export default function MaterialPage() {
           <Trophy size={32} className="mx-auto text-primary/40" />
           <p className="mt-3 font-heading text-lg font-semibold text-primary">Study materials coming soon</p>
           <p className="mt-2 text-sm text-charcoal/50">
-            Questions for this exam are being prepared. They'll appear here automatically once ready.
+            Questions for this exam are being prepared. They&apos;ll appear here automatically once ready.
           </p>
         </div>
       )}

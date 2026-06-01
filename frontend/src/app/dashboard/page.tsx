@@ -168,7 +168,7 @@ export default function DashboardPage() {
             <div className="mt-4 space-y-3">
               {materials.length === 0 && (
                 <p className="text-sm text-charcoal/40">
-                  No materials yet — they'll appear here after your first login syncs.
+                  No materials yet — they&apos;ll appear here after your first login syncs.
                 </p>
               )}
               {materials.map((m) => (
