@@ -50,7 +50,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadSession();
   }, []);
 
-  const loadSession = async () => {
+  const provision = async (token: string) => {
+    try {
+      await fetch("/api/v1/auth/provision", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch {
+      // Non-fatal — provision will retry on next login
+    }
+  };
+
+  const loadSession = async (isNewLogin = false) => {
     try {
       const cognitoUser = await getCurrentUser();
       const session = await fetchAuthSession();
@@ -67,6 +78,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Signal to middleware that user is authenticated
       document.cookie = "nkom_authed=1; path=/; SameSite=Lax";
+
+      if (isNewLogin && token) {
+        await provision(token);
+      }
     } catch {
       setUser(null);
       setAccessToken(null);
@@ -79,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     const result = await signIn({ username: email, password });
     if (result.isSignedIn) {
-      await loadSession();
+      await loadSession(true);
     } else if (result.nextStep.signInStep === "CONFIRM_SIGN_UP") {
       throw new Error("CONFIRM_EMAIL:" + email);
     }
@@ -111,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const confirmEmail = async (email: string, code: string) => {
     await confirmSignUp({ username: email, confirmationCode: code });
-    await loadSession();
+    await loadSession(true);
   };
 
   const resendCode = async (email: string) => {

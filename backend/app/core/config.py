@@ -25,7 +25,16 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:8000",
+        "https://nkom.vercel.app",
     ]
+    # Comma-separated override from env (e.g. ALLOWED_ORIGINS=https://nkom.vercel.app,http://localhost:3000)
+    ALLOWED_ORIGINS: str = ""
+
+    @property
+    def cors_origins(self) -> list[str]:
+        if self.ALLOWED_ORIGINS:
+            return [o.strip() for o in self.ALLOWED_ORIGINS.split(",") if o.strip()]
+        return self.CORS_ORIGINS
 
     # ── Database ─────────────────────────────────────────────────
     POSTGRES_USER: str = "nkom"
@@ -67,6 +76,7 @@ class Settings(BaseSettings):
     COGNITO_USER_POOL_ID: str = ""
     COGNITO_CLIENT_ID: str = ""
     COGNITO_REGION: str = ""  # falls back to AWS_REGION when empty
+    COGNITO_JWKS_URI: str = ""  # explicit override; auto-derived if empty
 
     @property
     def cognito_enabled(self) -> bool:
@@ -82,7 +92,7 @@ class Settings(BaseSettings):
 
     @property
     def cognito_jwks_uri(self) -> str:
-        return f"{self.cognito_issuer}/.well-known/jwks.json"
+        return self.COGNITO_JWKS_URI or f"{self.cognito_issuer}/.well-known/jwks.json"
 
     # ── AWS ──────────────────────────────────────────────────────
     AWS_REGION: str = "us-east-1"

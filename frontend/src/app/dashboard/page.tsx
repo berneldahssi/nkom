@@ -15,59 +15,38 @@ import {
   Calendar,
   ChevronRight,
   Plane,
+  Radio,
 } from "lucide-react";
-import { PSTAR_FLASHCARDS } from "@/lib/pstar-data";
-import { getDueCount } from "@/lib/sm2";
+import { useAuth } from "@/context/AuthContext";
+import { fetchMaterials, type Material } from "@/lib/materials-api";
+
+const MATERIAL_ICONS: Record<string, React.ReactNode> = {
+  PSTAR: <Plane size={20} className="text-terracotta" />,
+  "ROC-A": <Radio size={20} className="text-primary" />,
+};
 
 export default function DashboardPage() {
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const { user, accessToken } = useAuth();
+  const [materials, setMaterials] = useState<Material[]>([]);
 
-  const [flashcardsDue, setFlashcardsDue] = useState(0);
   useEffect(() => {
-    setFlashcardsDue(getDueCount(PSTAR_FLASHCARDS));
-  }, []);
+    if (!accessToken) return;
+    fetchMaterials(accessToken).then(setMaterials).catch(() => {});
+  }, [accessToken]);
+
+  const firstName = user?.firstName || user?.email?.split("@")[0] || "there";
 
   const stats = {
-    studyStreak: 3,
-    materialsCount: 14,
-    flashcardsDue,
-    totalMinutes: 120,
-    quizAvg: 74,
-    conceptsMastered: 0,
+    studyStreak: 0,
+    materialsCount: materials.length,
+    flashcardsDue: 0,
+    totalMinutes: 0,
+    quizAvg: 0,
   };
-
-  const recentMaterials = [
-    {
-      id: "1",
-      title: "PSTAR Full Question Bank",
-      subject: "All 14 Sections",
-      date: "Active",
-      formats: ["flashcards", "quiz"],
-      progress: 0,
-    },
-    {
-      id: "2",
-      title: "Collision Avoidance & Visual Signals",
-      subject: "Sections 1–2",
-      date: "Start here",
-      formats: ["flashcards", "quiz"],
-      progress: 0,
-    },
-    {
-      id: "3",
-      title: "Communications & Aerodromes",
-      subject: "Sections 3–4",
-      date: "Next up",
-      formats: ["flashcards", "quiz"],
-      progress: 0,
-    },
-  ];
 
   const upcomingReviews = [
     { title: "PSTAR Flashcard Session", cards: 20, due: "Now" },
     { title: "Full PSTAR Exam Simulation", cards: 50, due: "Today" },
-    { title: "Wake Turbulence — Section 7", cards: 15, due: "Tomorrow" },
   ];
 
   return (
@@ -76,10 +55,12 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">
-            {greeting}, Bernel!
+            {greeting}, {firstName}!
           </h1>
           <p className="mt-1 text-sm text-charcoal/50">
-            PSTAR target: 95%+ · {stats.flashcardsDue} flashcards ready to review.
+            {materials.length > 0
+              ? `${materials.length} material${materials.length !== 1 ? "s" : ""} in your library · keep it up.`
+              : "Your library is loading…"}
           </p>
         </div>
         <Link
@@ -121,10 +102,10 @@ export default function DashboardPage() {
         />
         <StatCard
           icon={<BookOpen className="h-5 w-5 text-primary" />}
-          label="PSTAR sections"
-          value={`${stats.materialsCount} / 14`}
-          change="Full question bank loaded"
-          positive
+          label="My materials"
+          value={`${stats.materialsCount}`}
+          change={stats.materialsCount > 0 ? "Library loaded" : "Log in to sync"}
+          positive={stats.materialsCount > 0}
         />
         <StatCard
           icon={<Target className="h-5 w-5 text-gold" />}
@@ -173,10 +154,10 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* PSTAR sections */}
+          {/* My materials */}
           <div className="rounded-2xl border border-primary/10 bg-white p-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-lg font-semibold text-primary">PSTAR study materials</h2>
+              <h2 className="font-heading text-lg font-semibold text-primary">My study materials</h2>
               <Link
                 href="/dashboard/materials"
                 className="flex items-center gap-1 text-sm font-medium text-terracotta hover:underline"
@@ -185,70 +166,34 @@ export default function DashboardPage() {
               </Link>
             </div>
             <div className="mt-4 space-y-3">
-              {recentMaterials.map((m) => (
+              {materials.length === 0 && (
+                <p className="text-sm text-charcoal/40">
+                  No materials yet — they'll appear here after your first login syncs.
+                </p>
+              )}
+              {materials.map((m) => (
                 <Link
                   key={m.id}
                   href={`/dashboard/materials/${m.id}`}
                   className="flex items-center gap-4 rounded-xl border border-primary/5 p-4 transition hover:border-primary/15 hover:bg-neutral/50"
                 >
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-terracotta/10">
-                    <Plane size={20} className="text-terracotta" />
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                    m.exam_code === "PSTAR" ? "bg-terracotta/10" : "bg-primary/10"
+                  }`}>
+                    {MATERIAL_ICONS[m.exam_code ?? ""] ?? <Layers size={20} className="text-primary" />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-charcoal">{m.title}</p>
-                    <div className="mt-1 flex items-center gap-3 text-xs text-charcoal/40">
-                      <span>{m.subject}</span>
-                      <span>{m.date}</span>
-                    </div>
+                    <p className="mt-1 text-xs text-charcoal/40">{m.subject}</p>
                   </div>
                   <div className="hidden items-center gap-1.5 sm:flex">
-                    {m.formats.map((f) => (
-                      <span
-                        key={f}
-                        className="rounded-md bg-primary/5 px-2 py-1 text-xs font-medium text-primary/60"
-                      >
+                    {Object.entries(m.generated_formats ?? {}).filter(([, v]) => v === "available").map(([f]) => (
+                      <span key={f} className="rounded-md bg-primary/5 px-2 py-1 text-xs font-medium text-primary/60">
                         {f}
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-16 rounded-full bg-primary/10">
-                      <div
-                        className="h-full rounded-full bg-terracotta"
-                        style={{ width: `${m.progress}%` }}
-                      />
-                    </div>
-                    <span className="text-xs font-medium text-charcoal/40">
-                      {m.progress > 0 ? `${m.progress}%` : "New"}
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Section progress */}
-          <div className="rounded-2xl border border-primary/10 bg-white p-6">
-            <h2 className="font-heading text-lg font-semibold text-primary">PSTAR sections overview</h2>
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {[
-                { num: 1, label: "Collision Avoidance", q: 10 },
-                { num: 2, label: "Visual Signals", q: 8 },
-                { num: 3, label: "Communications", q: 29 },
-                { num: 4, label: "Aerodromes", q: 10 },
-                { num: 5, label: "Equipment", q: 11 },
-                { num: 6, label: "Pilot Responsibilities", q: 23 },
-                { num: 7, label: "Wake Turbulence", q: 15 },
-                { num: 8, label: "Aeromedical", q: 13 },
-              ].map((s) => (
-                <Link
-                  key={s.num}
-                  href="/dashboard/quiz"
-                  className="flex flex-col rounded-xl border border-primary/5 p-3 transition hover:border-primary/15 hover:bg-neutral/50"
-                >
-                  <span className="text-xs font-semibold text-terracotta">§{s.num}</span>
-                  <span className="mt-1 text-xs font-medium text-charcoal leading-tight">{s.label}</span>
-                  <span className="mt-2 text-xs text-charcoal/30">{s.q} questions</span>
+                  <span className="text-xs font-medium text-charcoal/40">New</span>
                 </Link>
               ))}
             </div>
@@ -305,27 +250,29 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* PSTAR info card */}
-          <div className="rounded-2xl border border-terracotta/20 bg-gradient-to-br from-terracotta/5 to-gold/5 p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta/15">
-                <Plane size={20} className="text-terracotta" />
+          {/* Library tip */}
+          {materials.length > 0 && (
+            <div className="rounded-2xl border border-terracotta/20 bg-gradient-to-br from-terracotta/5 to-gold/5 p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta/15">
+                  <Plane size={20} className="text-terracotta" />
+                </div>
+                <div>
+                  <p className="font-heading text-sm font-semibold text-primary">Your library is ready</p>
+                  <p className="text-xs text-charcoal/50">{materials.length} exam material{materials.length !== 1 ? "s" : ""} loaded</p>
+                </div>
               </div>
-              <div>
-                <p className="font-heading text-sm font-semibold text-primary">PSTAR Exam</p>
-                <p className="text-xs text-charcoal/50">Transport Canada · Student Pilot Permit</p>
-              </div>
+              <p className="mt-3 text-xs text-charcoal/50">
+                PSTAR: 50 questions from 192 in the TC question bank. Pass mark: 90%. Your target: <strong>95%+</strong>.
+              </p>
+              <Link
+                href="/dashboard/materials"
+                className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-terracotta hover:underline"
+              >
+                Browse materials <ArrowRight size={12} />
+              </Link>
             </div>
-            <p className="mt-3 text-xs text-charcoal/50">
-              50 questions from 192 in the TC question bank. Pass mark: 90%. Your target: <strong>95%+</strong>.
-            </p>
-            <Link
-              href="/dashboard/quiz"
-              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-terracotta hover:underline"
-            >
-              Start full exam simulation <ArrowRight size={12} />
-            </Link>
-          </div>
+          )}
         </div>
       </div>
     </div>

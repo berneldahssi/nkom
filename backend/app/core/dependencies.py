@@ -1,102 +1,128 @@
-"""Shared FastAPI dependencies — auth, rate limiting, etc."""
+"""Shared FastAPI dependencies — Cognito auth, rate limiting, etc."""
 
+import structlog
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
+from jose import JWTError, jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+import httpx
+
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.security import decode_token
 from app.models.user import User
 
+logger = structlog.get_logger()
+
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_PREFIX}/auth/login"
+    tokenUrl=f"{settings.API_V1_PREFIX}/auth/login",
+    auto_error=True,
 )
 
-_UNAUTHORIZED = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"WWW-Authenticate": "Bearer"},
-)
+# In-memory JWKS cache — refreshed when a key isn't found
+_jwks_cache: dict | None = None
 
 
-async def _get_user_cognito(token: str, db: AsyncSession) -> User:
-    """Verify a Cognito JWT and return (or auto-create) the local user row."""
-    from app.core.cognito import verify_cognito_token  # lazy import avoids startup cost when disabled
+async def _get_jwks() -> dict:
+    global _jwks_cache
+    if _jwks_cache is None:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            r = await client.get(settings.cognito_jwks_uri)
+            r.raise_for_status()
+            _jwks_cache = r.json()
+    return _jwks_cache
+
+
+async def _verify_cognito_token(token: str) -> dict:
+    """Validate a Cognito access token and return its claims."""
+    global _jwks_cache
 
     try:
-        claims = await verify_cognito_token(token)
-    except ValueError:
-        raise _UNAUTHORIZED
-
-    cognito_sub: str = claims["sub"]
-    result = await db.execute(select(User).where(User.cognito_sub == cognito_sub))
-    user = result.scalar_one_or_none()
-
-    if user is None:
-        # First login — provision a local record from Cognito claims
-        email: str = claims.get("email", f"{cognito_sub}@cognito.local")
-        user = User(
-            cognito_sub=cognito_sub,
-            email=email,
-            first_name=claims.get("given_name"),
-            last_name=claims.get("family_name"),
-            subscription_tier="free",
-        )
-        db.add(user)
-        await db.flush()
-
-    return user
-
-
-async def _get_user_legacy(token: str, db: AsyncSession) -> User:
-    """Verify a locally-issued HS256 JWT — dev fallback when Cognito is not configured."""
-    try:
-        payload = decode_token(token)
-        user_id: str | None = payload.get("sub")
-        token_type: str | None = payload.get("type")
-        if user_id is None or token_type != "access":
-            raise _UNAUTHORIZED
+        header = jwt.get_unverified_header(token)
     except JWTError:
-        raise _UNAUTHORIZED
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token header")
 
-    user = await db.get(User, user_id)
-    if user is None:
-        raise _UNAUTHORIZED
-    return user
+    jwks = await _get_jwks()
+    key = next((k for k in jwks.get("keys", []) if k.get("kid") == header.get("kid")), None)
+
+    if key is None:
+        _jwks_cache = None
+        jwks = await _get_jwks()
+        key = next((k for k in jwks.get("keys", []) if k.get("kid") == header.get("kid")), None)
+
+    if key is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Signing key not found")
+
+    try:
+        claims = jwt.decode(
+            token,
+            key,
+            algorithms=["RS256"],
+            options={"verify_aud": False},  # Cognito access tokens use client_id, not aud
+            issuer=settings.cognito_issuer,
+        )
+    except JWTError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Token validation failed: {exc}",
+        )
+
+    if claims.get("client_id") != settings.COGNITO_CLIENT_ID:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid client")
+
+    if claims.get("token_use") != "access":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not an access token")
+
+    return claims
 
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db),
 ) -> User:
-    """Resolve the current user from either a Cognito RS256 JWT or a local HS256 token."""
-    if settings.cognito_enabled:
-        return await _get_user_cognito(token, db)
-    return await _get_user_legacy(token, db)
+    """Validate Cognito access token and return (or auto-create) the DB user."""
+    claims = await _verify_cognito_token(token)
+    cognito_sub: str | None = claims.get("sub")
+    if not cognito_sub:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing sub claim")
+
+    result = await db.execute(select(User).where(User.cognito_sub == cognito_sub))
+    user = result.scalar_one_or_none()
+
+    if user is None:
+        username: str = claims.get("username") or claims.get("cognito:username") or ""
+        email = username if "@" in username else f"{cognito_sub}@nkom.local"
+        user = User(
+            cognito_sub=cognito_sub,
+            email=email,
+            subscription_tier="free",
+        )
+        db.add(user)
+        try:
+            await db.flush()
+            await db.commit()
+        except Exception:
+            await db.rollback()
+            result = await db.execute(select(User).where(User.cognito_sub == cognito_sub))
+            user = result.scalar_one_or_none()
+            if user is None:
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="User creation failed")
+
+    return user
 
 
 async def get_current_active_user(
     current_user: User = Depends(get_current_user),
 ) -> User:
-    """Ensure the current user's account is active."""
     if not current_user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive account",
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive account")
     return current_user
 
 
 async def get_premium_user(
     current_user: User = Depends(get_current_active_user),
 ) -> User:
-    """Ensure the current user has an active premium subscription."""
     if not current_user.is_premium:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Premium subscription required",
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Premium subscription required")
     return current_user

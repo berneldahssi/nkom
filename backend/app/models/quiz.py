@@ -21,6 +21,13 @@ class QuizQuestion(Base):
         ForeignKey("study_materials.id", ondelete="CASCADE"),
         index=True,
     )
+    section_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("material_sections.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    source_ref: Mapped[str | None] = mapped_column(String(20))  # e.g. "1.01"
     question_text: Mapped[str] = mapped_column(Text, nullable=False)
     question_type: Mapped[str] = mapped_column(
         String(20), default="multiple_choice"
@@ -28,6 +35,7 @@ class QuizQuestion(Base):
     options: Mapped[dict | None] = mapped_column(JSONB)  # list of choice strings
     correct_answer: Mapped[str] = mapped_column(Text)
     explanation: Mapped[str | None] = mapped_column(Text)
+    hint: Mapped[str | None] = mapped_column(Text)
     difficulty: Mapped[int | None] = mapped_column(Integer)  # 1-5
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
@@ -35,6 +43,7 @@ class QuizQuestion(Base):
 
     # Relationships
     material = relationship("StudyMaterial", back_populates="quiz_questions")
+    section = relationship("MaterialSection", back_populates="quiz_questions")
 
     def __repr__(self) -> str:
         return f"<QuizQuestion {self.id} [{self.question_type}]>"
