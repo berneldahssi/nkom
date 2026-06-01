@@ -1,155 +1,147 @@
 "use client";
 
+import "@/lib/amplify";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  signIn,
+  signUp,
+  signOut as amplifySignOut,
+  getCurrentUser,
+  fetchAuthSession,
+  confirmSignUp,
+  resendSignUpCode,
+  resetPassword,
+  confirmResetPassword,
+  signInWithRedirect,
+  type SignUpOutput,
+} from "aws-amplify/auth";
+
+export interface NkomUser {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
 
 export interface AuthContextType {
-  user: any | null;
+  user: NkomUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   accessToken: string | null;
-  refreshToken: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, firstName?: string, lastName?: string, country?: string) => Promise<void>;
-  logout: () => void;
-  refreshAccessToken: () => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  register: (email: string, password: string, firstName?: string, lastName?: string) => Promise<SignUpOutput>;
+  confirmEmail: (email: string, code: string) => Promise<void>;
+  resendCode: (email: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  confirmForgotPassword: (email: string, code: string, newPassword: string) => Promise<void>;
+  logout: () => Promise<void>;
+  refreshAccessToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<NkomUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize auth state from localStorage (client-side only)
   useEffect(() => {
-    setIsMounted(true);
-    const storedAccessToken = localStorage.getItem("access_token");
-    const storedRefreshToken = localStorage.getItem("refresh_token");
+    loadSession();
+  }, []);
 
-    if (storedAccessToken) {
-      setAccessToken(storedAccessToken);
-      setRefreshToken(storedRefreshToken);
-      // Decode and set user from token (optional - or fetch user data)
-      try {
-        const payload = JSON.parse(atob(storedAccessToken.split(".")[1]));
-        setUser({ id: payload.sub });
-      } catch {
-        // Token invalid, clear it
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-      }
+  const loadSession = async () => {
+    try {
+      const cognitoUser = await getCurrentUser();
+      const session = await fetchAuthSession();
+      const token = session.tokens?.accessToken?.toString() ?? null;
+      const idPayload = session.tokens?.idToken?.payload;
+
+      setUser({
+        id: cognitoUser.userId,
+        email: (idPayload?.email as string) ?? cognitoUser.username,
+        firstName: (idPayload?.given_name as string) ?? undefined,
+        lastName: (idPayload?.family_name as string) ?? undefined,
+      });
+      setAccessToken(token);
+
+      // Signal to middleware that user is authenticated
+      document.cookie = "nkom_authed=1; path=/; SameSite=Lax";
+    } catch {
+      setUser(null);
+      setAccessToken(null);
+      document.cookie = "nkom_authed=; path=/; max-age=0";
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
-  }, [isMounted]);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  };
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch(`${API_URL}/api/v1/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || "Login failed");
-      }
-
-      const data = await response.json();
-      setAccessToken(data.access_token);
-      setRefreshToken(data.refresh_token);
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("refresh_token", data.refresh_token);
-
-      // Decode user from token
-      const payload = JSON.parse(atob(data.access_token.split(".")[1]));
-      setUser({ id: payload.sub });
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error;
+    const result = await signIn({ username: email, password });
+    if (result.isSignedIn) {
+      await loadSession();
+    } else if (result.nextStep.signInStep === "CONFIRM_SIGN_UP") {
+      throw new Error("CONFIRM_EMAIL:" + email);
     }
+  };
+
+  const loginWithGoogle = async () => {
+    await signInWithRedirect({ provider: "Google" });
   };
 
   const register = async (
     email: string,
     password: string,
     firstName?: string,
-    lastName?: string,
-    country?: string
-  ) => {
-    try {
-      const response = await fetch(`${API_URL}/api/v1/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+    lastName?: string
+  ): Promise<SignUpOutput> => {
+    return signUp({
+      username: email,
+      password,
+      options: {
+        userAttributes: {
           email,
-          password,
-          first_name: firstName,
-          last_name: lastName,
-          country,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || "Registration failed");
-      }
-
-      const data = await response.json();
-      setAccessToken(data.access_token);
-      setRefreshToken(data.refresh_token);
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("refresh_token", data.refresh_token);
-
-      // Decode user from token
-      const payload = JSON.parse(atob(data.access_token.split(".")[1]));
-      setUser({ id: payload.sub });
-    } catch (error) {
-      console.error("Register error:", error);
-      throw error;
-    }
+          ...(firstName && { given_name: firstName }),
+          ...(lastName && { family_name: lastName }),
+        },
+        autoSignIn: true,
+      },
+    });
   };
 
-  const logout = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
+  const confirmEmail = async (email: string, code: string) => {
+    await confirmSignUp({ username: email, confirmationCode: code });
+    await loadSession();
+  };
+
+  const resendCode = async (email: string) => {
+    await resendSignUpCode({ username: email });
+  };
+
+  const forgotPassword = async (email: string) => {
+    await resetPassword({ username: email });
+  };
+
+  const confirmForgotPassword = async (email: string, code: string, newPassword: string) => {
+    await confirmResetPassword({ username: email, confirmationCode: code, newPassword });
+  };
+
+  const logout = async () => {
+    await amplifySignOut();
     setUser(null);
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    setAccessToken(null);
+    document.cookie = "nkom_authed=; path=/; max-age=0";
   };
 
-  const refreshAccessToken = async () => {
-    if (!refreshToken) {
-      throw new Error("No refresh token available");
-    }
-
+  const refreshAccessToken = async (): Promise<string | null> => {
     try {
-      const response = await fetch(`${API_URL}/api/v1/auth/refresh`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh_token: refreshToken }),
-      });
-
-      if (!response.ok) {
-        // Refresh failed, logout user
-        logout();
-        throw new Error("Token refresh failed");
-      }
-
-      const data = await response.json();
-      setAccessToken(data.access_token);
-      setRefreshToken(data.refresh_token);
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("refresh_token", data.refresh_token);
-    } catch (error) {
-      console.error("Refresh token error:", error);
-      throw error;
+      const session = await fetchAuthSession({ forceRefresh: true });
+      const token = session.tokens?.accessToken?.toString() ?? null;
+      setAccessToken(token);
+      return token;
+    } catch {
+      await logout();
+      return null;
     }
   };
 
@@ -157,12 +149,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!accessToken,
+        isAuthenticated: !!user,
         isLoading,
         accessToken,
-        refreshToken,
         login,
+        loginWithGoogle,
         register,
+        confirmEmail,
+        resendCode,
+        forgotPassword,
+        confirmForgotPassword,
         logout,
         refreshAccessToken,
       }}
@@ -174,8 +170,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (context === undefined) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
